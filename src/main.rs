@@ -1,9 +1,13 @@
+#![feature(process_exitcode_placeholder,termination_trait_lib)]
 use std::fs::OpenOptions;
 use std::fs;
 use std::path::Path;
 use simplelog::*;
 use log::*;
-use pancurses::{initscr, endwin};
+use pancurses::endwin;
+
+mod screen;
+mod webdata;
 
 fn main() {
     let matches = clap::App::new(clap::crate_name!())
@@ -19,10 +23,9 @@ fn main() {
         .get_matches();
     init_logging(&matches);
 
-    let window = initscr();
-    window.printw("Hello Rust");
-    window.refresh();
-    window.getch();
+    let mut scr = screen::Screen::new(webdata::WebData::new());
+    scr.init();
+    scr.mainloop(&matches);
     endwin();
   }
 
@@ -38,9 +41,9 @@ fn init_logging<'a>(matches: &clap::ArgMatches<'a> ) {
         created_dir = true;
     }
     CombinedLogger::init(vec![
-        TermLogger::new(LevelFilter::Debug, Config::default(), TerminalMode::Mixed).unwrap(),
+        TermLogger::new(LevelFilter::Warn, Config::default(), TerminalMode::Mixed).unwrap(),
         WriteLogger::new(
-            LevelFilter::Info,
+            LevelFilter::Debug,
             Config::default(),
             OpenOptions::new()
                 .create(true)
@@ -50,7 +53,7 @@ fn init_logging<'a>(matches: &clap::ArgMatches<'a> ) {
         ),
     ])
     .unwrap();
-    debug!("Logging started for v{} of {}", version, appname);
+    info!("Logging started for v{} of {}", version, appname);
     if created_dir {
         info!("Created new config directory: {}", config_dir);
     }
