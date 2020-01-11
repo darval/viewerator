@@ -1,5 +1,6 @@
 use log::*;
 use reqwest;
+use serde::Deserialize;
 use serde_json;
 
 pub struct AllMineFee {
@@ -9,11 +10,26 @@ pub struct AllMineFee {
 pub struct Worker {
     pub name: String,
     pub dna: String,
+    pub sysmons: SysMons,
 
 }
 
 pub struct WorkSources {
 
+}
+
+#[derive(Deserialize, Debug)]
+pub struct SysMon {
+    pub health: String,
+    pub temperature: f32,
+    pub vccaux: f32,
+    pub vccbram: f32,
+    pub vccint: f32,
+}
+
+#[derive(Deserialize)]
+pub struct SysMons {
+    pub sysmon: Vec<SysMon>,
 }
 
 pub struct WebData {
@@ -55,7 +71,6 @@ impl WebData {
         debug!("Read minerator: {}", self.minerator);
 
         let config = &blob["workers"];
-        debug!("config = {}", config);
         // Because we don't know the name of the key for the config, we do weird stuff
         // to find the first key value pair and work on the value
         match config {
@@ -65,10 +80,14 @@ impl WebData {
                     match &device["devices"] {
                         serde_json::Value::Array(workers) => 
                         for w in workers {
+                            let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
+                            debug!("sysmon = {}", s);
+                            let sysmons = serde_json::from_str(&*s).unwrap();
                             self.workers.push(
                                 Worker { 
                                     dna: w["dna"].as_str().unwrap().to_string(), 
-                                    name: w["name"].as_str().unwrap().to_string()
+                                    name: w["name"].as_str().unwrap().to_string(),
+                                    sysmons,
                                 });
                         },
                         _ => {},
@@ -78,7 +97,7 @@ impl WebData {
             _ => {},
         }
 
-        debug!("Read first device dna {}, name {}", self.workers[0].dna, self.workers[0].name);
+//        debug!("Read first device dna {}, name {}", self.workers[0].dna, self.workers[0].name);
 
     }
 }
