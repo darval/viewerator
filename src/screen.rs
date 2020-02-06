@@ -117,13 +117,23 @@ impl Screen {
                     self.window.mvprintw(7,column_offset, Screen::float_to_string(sysmon.temperature));
                     self.window.mvprintw(8,column_offset, Screen::float_to_string(sysmon.vccint));
                 }
+                for (num, core) in w.cores.cores.iter().enumerate() {
+                    self.window.mvprintw(10, 0, "Clock Multiplier");
+                    self.window.mvprintw(11, 0, "Bad Nonces");
+                    self.window.mvprintw(12, 0, "Total Nonces");
+                    let attr = self.set_text_colors(&core.clock.health);
+                    self.window.mvprintw(10,20, Screen::float_to_string(core.clock.multiplier));
+                    self.window.mvprintw(11,20, Screen::float_to_string(core.clock.badNonces));
+                    self.window.mvprintw(12,20, Screen::float_to_string(core.clock.totalNonces));
+                    self.window.attroff(attr);
+                }
             }
         }
 
     }
 
     fn float_to_string(f: f32) -> String {
-        if f > 0.0 && f < 1000.0 {
+        if f >= 0.0 && f < 1000.0 {
             format!("{arg:>8.3}", arg=f)
         } else {
             f.to_string()

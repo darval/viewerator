@@ -11,6 +11,7 @@ pub struct Worker {
     pub name: String,
     pub dna: String,
     pub sysmons: SysMons,
+    pub cores: Cores,
 
 }
 
@@ -30,6 +31,44 @@ pub struct SysMon {
 #[derive(Deserialize)]
 pub struct SysMons {
     pub sysmon: Vec<SysMon>,
+}
+
+#[derive(Deserialize,Debug)]
+pub struct Clock {
+    pub badNonces: f32,
+    pub health: String,
+    pub multiplier: f32,
+    pub totalNonces: f32,
+}
+
+#[derive(Deserialize,Debug)]
+pub struct StatDetail {
+    pub accepted: f32,
+    pub calculated: f32,
+    pub endTime: i64,
+    pub found: f32,
+    pub requested: f32,
+    pub startTime: i64,
+    pub submitted: f32,
+    pub valid: f32,
+}
+
+#[derive(Deserialize,Debug)]
+pub struct Stats {
+    pub minute: StatDetail,
+    pub name: String,
+    pub total: StatDetail,
+}
+
+#[derive(Deserialize,Debug)]
+pub struct Core {
+    pub clock: Clock,
+    pub stats: Stats,
+}
+
+#[derive(Deserialize)]
+pub struct Cores {
+    pub cores: Vec<Core>,
 }
 
 pub struct WebData {
@@ -81,13 +120,18 @@ impl WebData {
                         serde_json::Value::Array(workers) => 
                         for w in workers {
                             let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
-                            debug!("sysmon = {}", s);
-                            let sysmons = serde_json::from_str(&*s).unwrap();
+                            let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
+
+                            let c = format!("{{ \"cores\": {} }}", w["cores"].to_string());
+                            debug!("cores = {}", c);
+                            let cores: Cores = serde_json::from_str(&*c).unwrap();
+
                             self.workers.push(
                                 Worker { 
                                     dna: w["dna"].as_str().unwrap().to_string(), 
                                     name: w["name"].as_str().unwrap().to_string(),
                                     sysmons,
+                                    cores,
                                 });
                         },
                         _ => {},
