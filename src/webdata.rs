@@ -91,6 +91,7 @@ impl WebData {
             worksources: WorkSources {},
         }
     }
+    
     pub fn getdata<'a>(&mut self,matches: &clap::ArgMatches<'a>) {
         let default_host = "http://localhost";
         let host = matches.value_of("host")
@@ -98,50 +99,74 @@ impl WebData {
         let url = format!("{}/api/status", host);
 
         debug!("Looking at url: {}", url);
-        let response = self.client.get(&url)
-            .send().unwrap()
-            .text().unwrap();
-        let blob: serde_json::Value = serde_json::from_str(&response).unwrap();
-
-        self.workers.clear();
-
-        self.minerator = blob["minerator"].as_str().unwrap()
-            .to_string();
-        debug!("Read minerator: {}", self.minerator);
-
-        let config = &blob["workers"];
-        // Because we don't know the name of the key for the config, we do weird stuff
-        // to find the first key value pair and work on the value
-        match config {
-            serde_json::Value::Object(thing) => {
-                if let Some(dev) = thing.iter().next() {
-                    let (_name, device) = dev;
-                    match &device["devices"] {
-                        serde_json::Value::Array(workers) => 
-                        for w in workers {
-                            let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
-                            let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
-
-                            let c = format!("{{ \"cores\": {} }}", w["cores"].to_string());
-                            debug!("cores = {}", c);
-                            let cores: Cores = serde_json::from_str(&*c).unwrap();
-
-                            self.workers.push(
-                                Worker { 
-                                    dna: w["dna"].as_str().unwrap().to_string(), 
-                                    name: w["name"].as_str().unwrap().to_string(),
-                                    sysmons,
-                                    cores,
-                                });
-                        },
-                        _ => {},
-                    }
+        let send = self.client.get(&url).send();
+        let resp = match send {
+            Err(e) => {
+                match e.status() {
+                    Some(err) => info!("Problem parsing info {}", err),
+                    None => info!("No status given"),
                 }
+                if e.is_redirect() {
+                    info!("server redirecting too many times or making loop");
+                }
+                return
             },
-            _ => {},
+            Ok(resp) => resp
+        };
+        match resp.text() {
+            Ok(response) => {
+                let blob: serde_json::Value = serde_json::from_str(&response).unwrap();
+
+                self.workers.clear();
+        
+                self.minerator = blob["minerator"].as_str().unwrap()
+                    .to_string();
+                debug!("Read minerator: {}", self.minerator);
+        
+                let config = &blob["workers"];
+                // Because we don't know the name of the key for the config, we do weird stuff
+                // to find the first key value pair and work on the value
+                match config {
+                    serde_json::Value::Object(thing) => {
+                        if let Some(dev) = thing.iter().next() {
+                            let (_name, device) = dev;
+                            match &device["devices"] {
+                                serde_json::Value::Array(workers) => 
+                                for w in workers {
+                                    let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
+                                    let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
+        
+                                    let c = format!("{{ \"cores\": {} }}", w["cores"].to_string());
+                                    debug!("cores = {}", c);
+                                    let cores: Cores = serde_json::from_str(&*c).unwrap();
+        
+                                    self.workers.push(
+                                        Worker { 
+                                            dna: w["dna"].as_str().unwrap().to_string(), 
+                                            name: w["name"].as_str().unwrap().to_string(),
+                                            sysmons,
+                                            cores,
+                                        });
+                                },
+                                _ => {},
+                            }
+                        }
+                    },
+                    _ => {},
+                }
+        
+        //        debug!("Read first device dna {}, name {}", self.workers[0].dna, self.workers[0].name);
+        
+            },
+            Err(e) => {
+                match e.status() {
+                    Some(err) => info!("Problem parsing info {}", err),
+                    None => info!("No status given"),
+                }
+                if e.is_redirect() {
+                    info!("server redirecting too many times or making loop");
+                }
+            }
         }
-
-//        debug!("Read first device dna {}, name {}", self.workers[0].dna, self.workers[0].name);
-
     }
 }
