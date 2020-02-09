@@ -129,32 +129,143 @@ impl Screen {
                     self.window.mvprintw(10, 58, "Since start [MH/s]");
                     self.window.mvprintw(11, 58, "WrkReq |Calcul |Found  |Valid  |Submit |Accept");         
                     self.window.mv(12, 58);
-                    self.window.hline(ACS_HLINE(), 46);
-                    self.window.mvprintw(10, 105, "Last Minute [MH/s]");
-                    self.window.mvprintw(11, 105, "WrkReq |Calcul |Found  |Valid  |Submit |Accept");         
-                    self.window.mv(12, 105);
-                    self.window.hline(ACS_HLINE(), 46);
+                    self.window.hline(ACS_HLINE(), 48);
+                    self.window.mvprintw(10, 108, "Last Minute [MH/s]");
+                    self.window.mvprintw(11, 108, "WrkReq |Calcul |Found  |Valid  |Submit |Accept ");         
+                    self.window.mv(12, 108);
+                    self.window.hline(ACS_HLINE(), 48);
 
                     // output totals
-                    self.window.mvprintw(15, 30, format!("{:29}", w.name));
-                    self.window.mvprintw(15, 58, Screen::float_to_string1(core.stats.total.requested));
-                    self.window.mvprintw(15, 66, Screen::float_to_string1(core.stats.total.calculated));
-                    self.window.mvprintw(15, 74, Screen::float_to_string1(core.stats.total.found));
-                    self.window.mvprintw(15, 82, Screen::float_to_string1(core.stats.total.valid));
-                    self.window.mvprintw(15, 90, Screen::float_to_string1(core.stats.total.submitted));
-                    self.window.mvprintw(15, 97, Screen::float_to_string1(core.stats.total.accepted));
-                    self.window.mvprintw(15, 105, Screen::float_to_string1(core.stats.minute.requested));
-                    self.window.mvprintw(15, 113, Screen::float_to_string1(core.stats.minute.calculated));
-                    self.window.mvprintw(15, 121, Screen::float_to_string1(core.stats.minute.found));
-                    self.window.mvprintw(15, 129, Screen::float_to_string1(core.stats.minute.valid));
-                    self.window.mvprintw(15, 137, Screen::float_to_string1(core.stats.minute.submitted));
-                    self.window.mvprintw(15, 145, Screen::float_to_string1(core.stats.minute.accepted));
+                    // worksource
+                    self.window.mvprintw(13, 30, format!("{:29}", w.worksource.stats.name));
+                    self.window.mvprintw(13, 58, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.requested)
+                        )
+                    );
+                    self.window.mvprintw(13, 66, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.calculated)
+                        )
+                    );
+                    self.window.mvprintw(13, 74, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.found)
+                        )
+                    );
+                    self.window.mvprintw(13, 82, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.valid)
+                        )
+                    );
+                    self.window.mvprintw(13, 90, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.submitted)
+                        )
+                    );
+                    self.window.mvprintw(13, 98, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.accepted)
+                        )
+                    );
+                    
+                    self.window.mvprintw(13, 108, Screen::float_to_string1(w.worksource.stats.minute.requested/60.0));
+                    self.window.mvprintw(13, 116, Screen::float_to_string1(w.worksource.stats.minute.calculated/60.0));
+                    self.window.mvprintw(13, 124, Screen::float_to_string1(w.worksource.stats.minute.found/60.0));
+                    self.window.mvprintw(13, 132, Screen::float_to_string1(w.worksource.stats.minute.valid/60.0));
+                    self.window.mvprintw(13, 140, Screen::float_to_string1(w.worksource.stats.minute.submitted/60.0));
+                    self.window.mvprintw(13, 148, Screen::float_to_string1(w.worksource.stats.minute.accepted/60.0));
+
+                    // fee
+                    self.window.mvprintw(14, 30, format!("{:29}", w.fee.stats.name));
+                    self.window.mvprintw(14, 58, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.requested)
+                        )
+                    );
+                    self.window.mvprintw(14, 66, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.calculated)
+                        )
+                    );
+                    self.window.mvprintw(14, 74, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.found)
+                        )
+                    );
+                    self.window.mvprintw(14, 82, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.valid)
+                        )
+                    );
+                    self.window.mvprintw(14, 90, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.submitted)
+                        )
+                    );
+                    self.window.mvprintw(14, 98, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.accepted)
+                        )
+                    );
+
+                    self.window.mvprintw(14, 108, Screen::float_to_string1(w.fee.stats.minute.requested/60.0));
+                    self.window.mvprintw(14, 116, Screen::float_to_string1(w.fee.stats.minute.calculated/60.0));
+                    self.window.mvprintw(14, 124, Screen::float_to_string1(w.fee.stats.minute.found/60.0));
+                    self.window.mvprintw(14, 132, Screen::float_to_string1(w.fee.stats.minute.valid/60.0));
+                    self.window.mvprintw(14, 140, Screen::float_to_string1(w.fee.stats.minute.submitted/60.0));
+                    self.window.mvprintw(14, 148, Screen::float_to_string1(w.fee.stats.minute.accepted/60.0));
+
+                    // total
+                    self.window.mvprintw(15, 30, format!("{:29}", core.stats.name));
+                    self.window.mvprintw(15, 58, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(core.stats.total, core.stats.total.requested)
+                        )
+                    );
+                    self.window.mvprintw(15, 66, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(core.stats.total, core.stats.total.calculated)
+                        )
+                    );
+                    self.window.mvprintw(15, 74, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(core.stats.total, core.stats.total.found)
+                        )
+                    );
+                    self.window.mvprintw(15, 82, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(core.stats.total, core.stats.total.valid)
+                        )
+                    );
+                    self.window.mvprintw(15, 90, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(core.stats.total, core.stats.total.submitted)
+                        )
+                    );
+                    self.window.mvprintw(15, 98, 
+                        Screen::float_to_string1(
+                            Screen::calc_total(core.stats.total, core.stats.total.accepted)
+                        )
+                    );
+
+                    self.window.mvprintw(15, 108, Screen::float_to_string1(core.stats.minute.requested/60.0));
+                    self.window.mvprintw(15, 116, Screen::float_to_string1(core.stats.minute.calculated/60.0));
+                    self.window.mvprintw(15, 124, Screen::float_to_string1(core.stats.minute.found/60.0));
+                    self.window.mvprintw(15, 132, Screen::float_to_string1(core.stats.minute.valid/60.0));
+                    self.window.mvprintw(15, 140, Screen::float_to_string1(core.stats.minute.submitted/60.0));
+                    self.window.mvprintw(15, 148, Screen::float_to_string1(core.stats.minute.accepted/60.0));
 
                 }
             }
         }
         self.window.mv(self.y-1, self.x-1);
 
+    }
+
+    fn calc_total(stat: webdata::StatDetail, val: f32) -> f32 {
+        let div:f32 = ((stat.endTime-stat.startTime)/1000000000) as f32;
+        val / div 
     }
 
     fn float_to_string1(f: f32) -> String {

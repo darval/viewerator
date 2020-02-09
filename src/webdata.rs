@@ -3,20 +3,13 @@ use reqwest;
 use serde::Deserialize;
 use serde_json;
 
-pub struct AllMineFee {
-
-}
-
 pub struct Worker {
     pub name: String,
     pub dna: String,
     pub sysmons: SysMons,
     pub cores: Cores,
-
-}
-
-pub struct WorkSources {
-
+    pub fee: Algo,
+    pub worksource: Algo,
 }
 
 #[derive(Deserialize, Debug)]
@@ -41,7 +34,7 @@ pub struct Clock {
     pub totalNonces: f32,
 }
 
-#[derive(Deserialize,Debug)]
+#[derive(Deserialize,Debug, Clone, Copy)]
 pub struct StatDetail {
     pub accepted: f32,
     pub calculated: f32,
@@ -53,7 +46,22 @@ pub struct StatDetail {
     pub valid: f32,
 }
 
-#[derive(Deserialize,Debug)]
+impl StatDetail {
+    pub fn new() -> StatDetail {
+        StatDetail {
+            accepted: 0.0,
+            calculated: 0.0,
+            endTime: 0,
+            found: 0.0,
+            requested: 0.0,
+            startTime: 0,
+            submitted: 0.0,
+            valid: 0.0,
+        }
+    }
+}
+
+#[derive(Deserialize,Debug, Clone)]
 pub struct Stats {
     pub minute: StatDetail,
     pub name: String,
@@ -71,24 +79,40 @@ pub struct Cores {
     pub cores: Vec<Core>,
 }
 
+#[derive(Deserialize, Debug, Clone)]
+pub struct Algo {
+    pub difficulty: f64,
+    pub hashesPerDiff1: f64,
+    pub stats: Stats,
+}
+
+impl Algo {
+    pub fn new() -> Algo {
+        Algo { 
+            difficulty: 0.0, 
+            hashesPerDiff1: 0.0, 
+            stats: Stats { 
+                minute: StatDetail::new(), 
+                name: "None".to_string(),
+                total: StatDetail::new(), 
+            }}
+    }
+}
+
 pub struct WebData {
     client: reqwest::blocking::Client,
-    fee: AllMineFee,
     pub minerator: String,
     version: i32,
     pub workers: Vec<Worker>,
-    worksources: WorkSources,
 }
 
 impl WebData {
     pub fn new() -> WebData {
         WebData {
             client: reqwest::blocking::Client::new(),
-            fee: AllMineFee {},
             minerator: "None".to_string(),
             version: 0,
             workers: vec!(),
-            worksources: WorkSources {},
         }
     }
     
@@ -122,6 +146,38 @@ impl WebData {
                 self.minerator = blob["minerator"].as_str().unwrap()
                     .to_string();
                 debug!("Read minerator: {}", self.minerator);
+
+                let thing = &blob["fee"]["allmine-fee-v1"][0]["algo"];
+                let mut fee = Algo::new();
+                match thing {
+                    serde_json::Value::Object(a) => {
+                        if let Some(al) = a.iter().next() {
+                            let (algo_name, algo) = al;
+                            let algo_str = algo.to_string();
+                            let algo: Algo = serde_json::from_str(&*algo_str).unwrap();
+                            fee = algo;
+                            }
+                        // _ => {},
+
+                    },
+                    _ => {},
+                }
+                
+                let thing = &blob["worksources"];
+                let mut worksource = Algo::new();
+                match thing {
+                    serde_json::Value::Object(a) => {
+                        if let Some(al) = a.iter().next() {
+                            let (algo_name, algo) = al;
+                            let algo_str = algo[0].to_string();
+                            let algo: Algo = serde_json::from_str(&*algo_str).unwrap();
+                            worksource = algo;
+                            }
+                        // _ => {},
+
+                    },
+                    _ => {},
+                }
         
                 let config = &blob["workers"];
                 // Because we don't know the name of the key for the config, we do weird stuff
@@ -137,7 +193,6 @@ impl WebData {
                                     let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
         
                                     let c = format!("{{ \"cores\": {} }}", w["cores"].to_string());
-                                    debug!("cores = {}", c);
                                     let cores: Cores = serde_json::from_str(&*c).unwrap();
         
                                     self.workers.push(
@@ -146,8 +201,10 @@ impl WebData {
                                             name: w["name"].as_str().unwrap().to_string(),
                                             sysmons,
                                             cores,
+                                            fee: fee.clone(),
+                                            worksource: worksource.clone(),
                                         });
-                                },
+                                    },
                                 _ => {},
                             }
                         }
