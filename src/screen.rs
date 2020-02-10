@@ -60,8 +60,26 @@ impl Screen {
         init_pair(HEALTH_COLOR_RAMPUP, pancurses::COLOR_BLACK, pancurses::COLOR_GREEN);
         init_pair(HEALTH_COLOR_SLOWINCREASE, pancurses::COLOR_BLACK, pancurses::COLOR_CYAN);
         init_pair(HEALTH_COLOR_HOLD, pancurses::COLOR_BLACK, pancurses::COLOR_YELLOW);
+        init_pair(HEALTH_COLOR_SLOWDECREASE, pancurses::COLOR_WHITE, pancurses::COLOR_MAGENTA);
+        init_pair(HEALTH_COLOR_CRITICAL, pancurses::COLOR_WHITE, pancurses::COLOR_RED);
 
-        self.window.printw(format!("Viewerator v{}, press delete to exit\n", clap::crate_version!()));
+        self.window.printw(format!("Viewerator v{}, press delete to exit    ", clap::crate_version!()));
+        let attr = self.set_text_colors(&"critical".to_string());
+        self.window.printw(" --- ");
+        self.window.attroff(attr);
+        let attr = self.set_text_colors(&"slowDecrease".to_string());
+        self.window.printw("  -  ");
+        self.window.attroff(attr);
+        let attr = self.set_text_colors(&"hold".to_string());
+        self.window.printw("     ");
+        self.window.attroff(attr);
+        let attr = self.set_text_colors(&"slowIncrease".to_string());
+        self.window.printw("  +  ");
+        self.window.attroff(attr);
+        let attr = self.set_text_colors(&"rampUp".to_string());
+        self.window.printw(" +++ \n");
+        self.window.attroff(attr);
+
         self.window.hline(ACS_HLINE(), self.x);
 
         self.window.keypad(true);
@@ -102,11 +120,25 @@ impl Screen {
             if i == self.current_worker {
                 self.window.mvprintw(2, 0, format!("DNA: {}", w.dna));
                 self.window.mvprintw(3, 0, format!("Name: {}", w.name));
+
                 self.window.mv(4,0);
+                self.window.hline(ACS_HLINE(), 24);
+                self.window.mvprintw(5,0, "Input Power    ");
+                let attr = self.set_text_colors(&w.input_power_health);
+                self.window.mvprintw(5, 16, format!("{}", Screen::float_to_string3(w.input_power)));
+                self.window.attroff(attr);
+
+                self.window.mvprintw(6,0, "AUX Current");
+                let attr = self.set_text_colors(&w.aux_current_health);
+                self.window.mvprintw(6, 16, format!("{}", Screen::float_to_string3(w.aux_current)));
+                self.window.attroff(attr);
+
+                self.window.mv(4,60);
                 let line_length: i32 =  (20 * w.sysmons.sysmon.len()).try_into().unwrap();
                 self.window.hline(ACS_HLINE(), line_length);
                 for (num, sysmon) in w.sysmons.sysmon.iter().enumerate() {
-                    let column_offset: i32 = (num * 20).try_into().unwrap();
+                    let mut column_offset: i32 = (num * 20).try_into().unwrap();
+                    column_offset += 60;
                     let attr = self.set_text_colors(&sysmon.health);
                     self.window.mvprintw(5, column_offset, format!("Sysmon {}", num));
                     self.window.attroff(attr);
@@ -296,6 +328,8 @@ impl Screen {
             "rampUp" => { attr = pancurses::COLOR_PAIR(HEALTH_COLOR_RAMPUP.try_into().unwrap());}, 
             "slowIncrease" => { attr = pancurses::COLOR_PAIR(HEALTH_COLOR_SLOWINCREASE.try_into().unwrap()); }, 
             "hold" => { attr = pancurses::COLOR_PAIR(HEALTH_COLOR_HOLD.try_into().unwrap()); }, 
+            "slowDecrease" => { attr = pancurses::COLOR_PAIR(HEALTH_COLOR_SLOWDECREASE.try_into().unwrap()); }, 
+            "critical" => { attr = pancurses::COLOR_PAIR(HEALTH_COLOR_CRITICAL.try_into().unwrap()); }, 
             _ => {},
         }
         self.window.attron(attr);

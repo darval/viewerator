@@ -6,6 +6,10 @@ use serde_json;
 pub struct Worker {
     pub name: String,
     pub dna: String,
+    pub input_power: f32,
+    pub input_power_health: String,
+    pub aux_current: f32,
+    pub aux_current_health: String,
     pub sysmons: SysMons,
     pub cores: Cores,
     pub fee: Algo,
@@ -139,8 +143,14 @@ impl WebData {
         };
         match resp.text() {
             Ok(response) => {
-                let blob: serde_json::Value = serde_json::from_str(&response).unwrap();
+                let blob: serde_json::Value = match serde_json::from_str(&response) {
+                    Ok(blob) => blob,
+                    Err(err) => {
+                        warn!("Error parsing json: {}", err);
+                        return;
+                    }
 
+                };
                 self.workers.clear();
         
                 self.minerator = blob["minerator"].as_str().unwrap()
@@ -152,7 +162,7 @@ impl WebData {
                 match thing {
                     serde_json::Value::Object(a) => {
                         if let Some(al) = a.iter().next() {
-                            let (algo_name, algo) = al;
+                            let (_algo_name, algo) = al;
                             let algo_str = algo.to_string();
                             let algo: Algo = serde_json::from_str(&*algo_str).unwrap();
                             fee = algo;
@@ -168,7 +178,7 @@ impl WebData {
                 match thing {
                     serde_json::Value::Object(a) => {
                         if let Some(al) = a.iter().next() {
-                            let (algo_name, algo) = al;
+                            let (_algo_name, algo) = al;
                             let algo_str = algo[0].to_string();
                             let algo: Algo = serde_json::from_str(&*algo_str).unwrap();
                             worksource = algo;
@@ -189,6 +199,11 @@ impl WebData {
                             match &device["devices"] {
                                 serde_json::Value::Array(workers) => 
                                 for w in workers {
+                                    let ip = format!("{}", w["bmc"]["adc"]["inputPower"].to_string());
+                                    let input_power: f32 = serde_json::from_str(&*ip).unwrap();
+                                    let ac = format!("{}", w["bmc"]["adc"]["aux12VCurrent"].to_string());
+                                    let aux_current: f32 = serde_json::from_str(&*ac).unwrap();
+
                                     let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
                                     let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
         
@@ -199,6 +214,10 @@ impl WebData {
                                         Worker { 
                                             dna: w["dna"].as_str().unwrap().to_string(), 
                                             name: w["name"].as_str().unwrap().to_string(),
+                                            input_power,
+                                            input_power_health: w["bmc"]["health"]["inputPower"].as_str().unwrap().to_string(),
+                                            aux_current,
+                                            aux_current_health: w["bmc"]["health"]["inputCurrentAUX"].as_str().unwrap().to_string(),
                                             sysmons,
                                             cores,
                                             fee: fee.clone(),
