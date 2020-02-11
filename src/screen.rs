@@ -13,8 +13,8 @@ pub struct Screen {
     current_worker: usize,
 }
 
-const MIN_X: i32 = 80;
-const MIN_Y: i32 = 25;
+const MIN_X: i32 = 126;
+const MIN_Y: i32 = 26;
 const HEALTH_COLOR_RAMPUP: i16 = 1;
 const HEALTH_COLOR_SLOWINCREASE: i16 = 2;
 const HEALTH_COLOR_HOLD: i16 = 3;
@@ -133,160 +133,38 @@ impl Screen {
                 self.window.mvprintw(6, 16, format!("{}", Screen::float_to_string3(w.aux_current)));
                 self.window.attroff(attr);
 
-                self.window.mv(4,60);
-                let line_length: i32 =  (20 * w.sysmons.sysmon.len()).try_into().unwrap();
-                self.window.hline(ACS_HLINE(), line_length);
-                for (num, sysmon) in w.sysmons.sysmon.iter().enumerate() {
-                    let mut column_offset: i32 = (num * 20).try_into().unwrap();
-                    column_offset += 60;
-                    let attr = self.set_text_colors(&sysmon.health);
-                    self.window.mvprintw(5, column_offset, format!("Sysmon {}", num));
-                    self.window.attroff(attr);
-                    self.window.mvprintw(7,column_offset, format!("{} degrees", Screen::float_to_string3(sysmon.temperature)));
-                    self.window.mvprintw(8,column_offset, format!("{} volts", Screen::float_to_string3(sysmon.vccint)));
-                }
+                self.window.mvprintw(7,0, "PEX Current");
+                let attr = self.set_text_colors(&w.pex_current_health);
+                self.window.mvprintw(7, 16, format!("{}", Screen::float_to_string3(w.pex_current)));
+                self.window.attroff(attr);
+
+                self.window.mvprintw(8,0, "AUX 12V");
+                let attr = self.set_text_colors(&w.aux_12v_health);
+                self.window.mvprintw(8, 16, format!("{}", Screen::float_to_string3(w.aux_12v)));
+                self.window.attroff(attr);
+
+                self.window.mvprintw(9,0, "PEX 12V");
+                let attr = self.set_text_colors(&w.pex_12v_health);
+                self.window.mvprintw(9, 16, format!("{}", Screen::float_to_string3(w.pex_12v)));
+                self.window.attroff(attr);
+
+                self.window.mvprintw(10,0, "VCCINT");
+                self.window.mvprintw(10, 16, format!("{}", Screen::float_to_string3(w.vccint)));
+
+                self.window.mvprintw(11,0, "VCCINT Current");
+                let attr = self.set_text_colors(&w.vccint_current_health);
+                self.window.mvprintw(11, 16, format!("{}", Screen::float_to_string3(w.vccint_current)));
+                self.window.attroff(attr);
+
+                self.window.mvprintw(12,0, "VRCTRL Temp");
+                let attr = self.set_text_colors(&w.vrctrl_temp_health);
+                self.window.mvprintw(12, 16, format!("{}", Screen::float_to_string3(w.vrctrl_temp)));
+                self.window.attroff(attr);
+                self.draw_phases(4, 26, &w);
+                self.draw_sysmons(9, 50, &w.sysmons);
                 for (_num, core) in w.cores.cores.iter().enumerate() {
-                    self.window.mvprintw(13, 0, "Clock Multiplier");
-                    self.window.mvprintw(14, 0, "Bad Nonces");
-                    self.window.mvprintw(15, 0, "Total Nonces");
-                    let attr = self.set_text_colors(&core.clock.health);
-                    self.window.mvprintw(13, 20, Screen::float_to_string3(core.clock.multiplier));
-                    self.window.mvprintw(14, 20, Screen::float_to_string3(core.clock.badNonces));
-                    self.window.mvprintw(15, 20, Screen::float_to_string3(core.clock.totalNonces));
-                    self.window.attroff(attr);
-
-                    self.window.mvprintw(10, 30, "Worker/Pool Name");
-                    self.window.mv(12, 30);
-                    self.window.hline(ACS_HLINE(), 27);
-                    self.window.mvprintw(10, 58, "Since start [MH/s]");
-                    self.window.mvprintw(11, 58, "WrkReq |Calcul |Found  |Valid  |Submit |Accept");         
-                    self.window.mv(12, 58);
-                    self.window.hline(ACS_HLINE(), 48);
-                    self.window.mvprintw(10, 108, "Last Minute [MH/s]");
-                    self.window.mvprintw(11, 108, "WrkReq |Calcul |Found  |Valid  |Submit |Accept ");         
-                    self.window.mv(12, 108);
-                    self.window.hline(ACS_HLINE(), 48);
-
-                    // output totals
-                    // worksource
-                    self.window.mvprintw(13, 30, format!("{:29}", w.worksource.stats.name));
-                    self.window.mvprintw(13, 58, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.requested)
-                        )
-                    );
-                    self.window.mvprintw(13, 66, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.calculated)
-                        )
-                    );
-                    self.window.mvprintw(13, 74, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.found)
-                        )
-                    );
-                    self.window.mvprintw(13, 82, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.valid)
-                        )
-                    );
-                    self.window.mvprintw(13, 90, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.submitted)
-                        )
-                    );
-                    self.window.mvprintw(13, 98, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.worksource.stats.total, w.worksource.stats.total.accepted)
-                        )
-                    );
-                    
-                    self.window.mvprintw(13, 108, Screen::float_to_string1(w.worksource.stats.minute.requested/60.0));
-                    self.window.mvprintw(13, 116, Screen::float_to_string1(w.worksource.stats.minute.calculated/60.0));
-                    self.window.mvprintw(13, 124, Screen::float_to_string1(w.worksource.stats.minute.found/60.0));
-                    self.window.mvprintw(13, 132, Screen::float_to_string1(w.worksource.stats.minute.valid/60.0));
-                    self.window.mvprintw(13, 140, Screen::float_to_string1(w.worksource.stats.minute.submitted/60.0));
-                    self.window.mvprintw(13, 148, Screen::float_to_string1(w.worksource.stats.minute.accepted/60.0));
-
-                    // fee
-                    self.window.mvprintw(14, 30, format!("{:29}", w.fee.stats.name));
-                    self.window.mvprintw(14, 58, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.requested)
-                        )
-                    );
-                    self.window.mvprintw(14, 66, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.calculated)
-                        )
-                    );
-                    self.window.mvprintw(14, 74, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.found)
-                        )
-                    );
-                    self.window.mvprintw(14, 82, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.valid)
-                        )
-                    );
-                    self.window.mvprintw(14, 90, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.submitted)
-                        )
-                    );
-                    self.window.mvprintw(14, 98, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(w.fee.stats.total, w.fee.stats.total.accepted)
-                        )
-                    );
-
-                    self.window.mvprintw(14, 108, Screen::float_to_string1(w.fee.stats.minute.requested/60.0));
-                    self.window.mvprintw(14, 116, Screen::float_to_string1(w.fee.stats.minute.calculated/60.0));
-                    self.window.mvprintw(14, 124, Screen::float_to_string1(w.fee.stats.minute.found/60.0));
-                    self.window.mvprintw(14, 132, Screen::float_to_string1(w.fee.stats.minute.valid/60.0));
-                    self.window.mvprintw(14, 140, Screen::float_to_string1(w.fee.stats.minute.submitted/60.0));
-                    self.window.mvprintw(14, 148, Screen::float_to_string1(w.fee.stats.minute.accepted/60.0));
-
-                    // total
-                    self.window.mvprintw(15, 30, format!("{:29}", core.stats.name));
-                    self.window.mvprintw(15, 58, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(core.stats.total, core.stats.total.requested)
-                        )
-                    );
-                    self.window.mvprintw(15, 66, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(core.stats.total, core.stats.total.calculated)
-                        )
-                    );
-                    self.window.mvprintw(15, 74, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(core.stats.total, core.stats.total.found)
-                        )
-                    );
-                    self.window.mvprintw(15, 82, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(core.stats.total, core.stats.total.valid)
-                        )
-                    );
-                    self.window.mvprintw(15, 90, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(core.stats.total, core.stats.total.submitted)
-                        )
-                    );
-                    self.window.mvprintw(15, 98, 
-                        Screen::float_to_string1(
-                            Screen::calc_total(core.stats.total, core.stats.total.accepted)
-                        )
-                    );
-
-                    self.window.mvprintw(15, 108, Screen::float_to_string1(core.stats.minute.requested/60.0));
-                    self.window.mvprintw(15, 116, Screen::float_to_string1(core.stats.minute.calculated/60.0));
-                    self.window.mvprintw(15, 124, Screen::float_to_string1(core.stats.minute.found/60.0));
-                    self.window.mvprintw(15, 132, Screen::float_to_string1(core.stats.minute.valid/60.0));
-                    self.window.mvprintw(15, 140, Screen::float_to_string1(core.stats.minute.submitted/60.0));
-                    self.window.mvprintw(15, 148, Screen::float_to_string1(core.stats.minute.accepted/60.0));
+                    self.draw_clock(4, 50, &core.clock);
+                    self.draw_stats(14, 0, &w, &core);
 
                 }
             }
@@ -334,5 +212,129 @@ impl Screen {
         }
         self.window.attron(attr);
         attr
+    }
+
+    fn draw_sysmons(&self, y: i32, x: i32, sysmons: &webdata::SysMons) {
+        let line_length: i32 =  (20 * sysmons.sysmon.len()).try_into().unwrap();
+        self.window.mv(y,x);
+        self.window.hline(ACS_HLINE(), line_length);
+        for (num, sysmon) in sysmons.sysmon.iter().enumerate() {
+            let mut column_offset: i32 = (num * 20).try_into().unwrap();
+            column_offset += x;
+            self.window.mvprintw(y+1, column_offset, format!("Sysmon {}", num));
+            let attr = self.set_text_colors(&sysmon.health);
+            self.window.mvprintw(y+2,column_offset, format!("{}", Screen::float_to_string3(sysmon.temperature)));
+            self.window.attroff(attr);
+            self.window.mvprintw(y+2, column_offset + 9, "degrees");
+            self.window.mvprintw(y+3,column_offset, format!("{} volts", Screen::float_to_string3(sysmon.vccint)));
+        }
+
+    }
+
+    fn draw_phases(&self, y: i32, x: i32, w: &webdata::Worker) {
+        self.window.mv(y,x);
+        self.window.hline(ACS_HLINE(), 22);
+
+        self.window.mvprintw(y+1, x, "Phase 0");
+        self.window.mvprintw(y+2, x, "statusGlobal");
+        self.window.mvprintw(y+2, x+14, format!("{:#08x}", w.phase0_status_global));
+        self.window.mvprintw(y+3, x, "temperature");
+        let attr = self.set_text_colors(&w.phase0_temperature_health);
+        self.window.mvprintw(y+3, x+14, format!("{}", Screen::float_to_string3(w.phase0_temperature)));
+        self.window.attroff(attr);
+        self.window.mvprintw(y+4, x, "vout");
+        self.window.mvprintw(y+4, x+14, format!("{}", Screen::float_to_string3(w.phase0_vout)));
+
+        self.window.mvprintw(y+5, x, "Phase 1");
+        self.window.mvprintw(y+6, x, "statusGlobal");
+        self.window.mvprintw(y+6, x+14, format!("{:#08x}", w.phase1_status_global));
+        self.window.mvprintw(y+7, x, "temperature");
+        let attr = self.set_text_colors(&w.phase1_temperature_health);
+        self.window.mvprintw(y+7, x+14, format!("{}", Screen::float_to_string3(w.phase1_temperature)));
+        self.window.attroff(attr);
+        self.window.mvprintw(y+8, x, "vout");
+        self.window.mvprintw(y+8, x+14, format!("{}", Screen::float_to_string3(w.phase1_vout)));
+
+    }
+
+    fn draw_clock(&self, y :i32, x: i32, clock: &webdata::Clock) {
+        self.window.mv(y,x);
+        self.window.hline(ACS_HLINE(), 28);
+        
+        self.window.mvprintw(y+1, x, "Clock Multiplier");
+        self.window.mvprintw(y+2, x, "Bad Nonces");
+        self.window.mvprintw(y+3, x, "Total Nonces");
+        let attr = self.set_text_colors(&clock.health);
+        self.window.mvprintw(y+1, x+20, Screen::float_to_string3(clock.multiplier));
+        self.window.mvprintw(y+2, x+20, Screen::float_to_string3(clock.badNonces));
+        self.window.mvprintw(y+3, x+20, Screen::float_to_string3(clock.totalNonces));
+        self.window.attroff(attr);
+
+    }
+
+    fn draw_stats(&self, y: i32, x: i32, w: &webdata::Worker, core: &webdata::Core) {
+        self.window.mvprintw(y, x, "Worker/Pool Name");
+        self.window.mv(y+2, x);
+        self.window.hline(ACS_HLINE(), 27);
+        self.window.mvprintw(y  , x+28, "Since start [MH/s]");
+        self.window.mvprintw(y+1, x+28, "WrkReq |Calcul |Found  |Valid  |Submit |Accept");         
+        self.window.mv(y+2, x+28);
+        self.window.hline(ACS_HLINE(), 48);
+        self.window.mvprintw(y  , x+78, "Last Minute [MH/s]");
+        self.window.mvprintw(y+1, x+78, "WrkReq |Calcul |Found  |Valid  |Submit |Accept ");         
+        self.window.mv(y+2, x+78);
+        self.window.hline(ACS_HLINE(), 48);
+
+        // output totals
+        // worksource
+        self.draw_stat_line(y+3, x, &w.worksource.stats);
+        // fee
+        self.draw_stat_line(y+4, x, &w.fee.stats);
+        // total
+        self.draw_stat_line(y+5, x, &core.stats);
+
+ 
+    }
+
+    fn draw_stat_line(&self, y: i32, x: i32, stats: &webdata::Stats) {
+        self.window.mvprintw(y, x, format!("{:29}", stats.name));
+        self.window.mvprintw(y, x+28, 
+            Screen::float_to_string1(
+                Screen::calc_total(stats.total, stats.total.requested)
+            )
+        );
+        self.window.mvprintw(y, x+36, 
+            Screen::float_to_string1(
+                Screen::calc_total(stats.total, stats.total.calculated)
+            )
+        );
+        self.window.mvprintw(y, x+44, 
+            Screen::float_to_string1(
+                Screen::calc_total(stats.total, stats.total.found)
+            )
+        );
+        self.window.mvprintw(y, x+52, 
+            Screen::float_to_string1(
+                Screen::calc_total(stats.total, stats.total.valid)
+            )
+        );
+        self.window.mvprintw(y, x+60, 
+            Screen::float_to_string1(
+                Screen::calc_total(stats.total, stats.total.submitted)
+            )
+        );
+        self.window.mvprintw(y, x+68, 
+            Screen::float_to_string1(
+                Screen::calc_total(stats.total, stats.total.accepted)
+            )
+        );
+        
+        self.window.mvprintw(y, x+78, Screen::float_to_string1(stats.minute.requested/60.0));
+        self.window.mvprintw(y, x+86, Screen::float_to_string1(stats.minute.calculated/60.0));
+        self.window.mvprintw(y, x+94, Screen::float_to_string1(stats.minute.found/60.0));
+        self.window.mvprintw(y, x+102, Screen::float_to_string1(stats.minute.valid/60.0));
+        self.window.mvprintw(y, x+110, Screen::float_to_string1(stats.minute.submitted/60.0));
+        self.window.mvprintw(y, x+118, Screen::float_to_string1(stats.minute.accepted/60.0));
+
     }
 }

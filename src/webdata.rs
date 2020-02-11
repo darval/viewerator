@@ -10,6 +10,25 @@ pub struct Worker {
     pub input_power_health: String,
     pub aux_current: f32,
     pub aux_current_health: String,
+    pub pex_current: f32,
+    pub pex_current_health: String,
+    pub aux_12v: f32,
+    pub aux_12v_health: String,
+    pub pex_12v: f32,
+    pub pex_12v_health: String,
+    pub vccint: f32,
+    pub vccint_current: f32,
+    pub vccint_current_health: String,
+    pub vrctrl_temp: f32,
+    pub vrctrl_temp_health: String,
+    pub phase0_status_global: u32,
+    pub phase0_temperature: f32,
+    pub phase0_temperature_health: String, 
+    pub phase0_vout: f32,
+    pub phase1_status_global: u32,
+    pub phase1_temperature: f32,
+    pub phase1_temperature_health: String, 
+    pub phase1_vout: f32,
     pub sysmons: SysMons,
     pub cores: Cores,
     pub fee: Algo,
@@ -203,6 +222,30 @@ impl WebData {
                                     let input_power: f32 = serde_json::from_str(&*ip).unwrap();
                                     let ac = format!("{}", w["bmc"]["adc"]["aux12VCurrent"].to_string());
                                     let aux_current: f32 = serde_json::from_str(&*ac).unwrap();
+                                    let pc = format!("{}", w["bmc"]["adc"]["pex12VCurrent"].to_string());
+                                    let pex_current: f32 = serde_json::from_str(&*pc).unwrap();
+                                    let av = format!("{}", w["bmc"]["adc"]["aux12V"].to_string());
+                                    let aux_12v: f32 = serde_json::from_str(&*av).unwrap();
+                                    let pv = format!("{}", w["bmc"]["adc"]["pex12V"].to_string());
+                                    let pex_12v: f32 = serde_json::from_str(&*pv).unwrap();
+                                    let vi = format!("{}", w["bmc"]["adc"]["vccint"].to_string());
+                                    let vccint: f32 = serde_json::from_str(&*vi).unwrap();
+                                    let vc = format!("{}", w["bmc"]["adc"]["vccintCurrent"].to_string());
+                                    let vccint_current: f32 = serde_json::from_str(&*vc).unwrap();
+                                    let vt = format!("{}", w["bmc"]["temperature"].to_string());
+                                    let vrctrl_temp: f32 = serde_json::from_str(&*vt).unwrap();
+                                    let psg = format!("{}", w["bmc"]["phases"][0]["statusGlobal"].to_string());
+                                    let phase0_status_global: u32 = serde_json::from_str(&*psg).unwrap();
+                                    let pt = format!("{}", w["bmc"]["phases"][0]["temperature"].to_string());
+                                    let phase0_temperature: f32 = serde_json::from_str(&*pt).unwrap();
+                                    let pv = format!("{}", w["bmc"]["phases"][0]["vout"].to_string());
+                                    let phase0_vout: f32 = serde_json::from_str(&*pv).unwrap();
+                                    let psg = format!("{}", w["bmc"]["phases"][1]["statusGlobal"].to_string());
+                                    let phase1_status_global: u32 = serde_json::from_str(&*psg).unwrap();
+                                    let pt = format!("{}", w["bmc"]["phases"][1]["temperature"].to_string());
+                                    let phase1_temperature: f32 = serde_json::from_str(&*pt).unwrap();
+                                    let pv = format!("{}", w["bmc"]["phases"][1]["vout"].to_string());
+                                    let phase1_vout: f32 = serde_json::from_str(&*pv).unwrap();
 
                                     let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
                                     let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
@@ -218,6 +261,25 @@ impl WebData {
                                             input_power_health: w["bmc"]["health"]["inputPower"].as_str().unwrap().to_string(),
                                             aux_current,
                                             aux_current_health: w["bmc"]["health"]["inputCurrentAUX"].as_str().unwrap().to_string(),
+                                            pex_current,
+                                            pex_current_health: w["bmc"]["health"]["inputCurrentPEX"].as_str().unwrap().to_string(),
+                                            aux_12v,
+                                            aux_12v_health: w["bmc"]["health"]["inputVoltageAUX"].as_str().unwrap().to_string(),
+                                            pex_12v,
+                                            pex_12v_health: w["bmc"]["health"]["inputVoltagePEX"].as_str().unwrap().to_string(),
+                                            vccint,
+                                            vccint_current,
+                                            vccint_current_health: w["bmc"]["health"]["vccintCurrent"].as_str().unwrap().to_string(),
+                                            vrctrl_temp,
+                                            vrctrl_temp_health: w["bmc"]["health"]["vrCtrl"].as_str().unwrap().to_string(),
+                                            phase0_status_global,
+                                            phase0_temperature,
+                                            phase0_temperature_health: w["bmc"]["health"]["vrPower"].as_str().unwrap().to_string(),
+                                            phase0_vout,
+                                            phase1_status_global,
+                                            phase1_temperature,
+                                            phase1_temperature_health: w["bmc"]["health"]["vrPower"].as_str().unwrap().to_string(),
+                                            phase1_vout,
                                             sysmons,
                                             cores,
                                             fee: fee.clone(),
