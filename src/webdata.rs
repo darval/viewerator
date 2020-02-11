@@ -50,6 +50,7 @@ pub struct SysMons {
 }
 
 #[derive(Deserialize,Debug)]
+#[allow(non_snake_case)]
 pub struct Clock {
     pub badNonces: f32,
     pub health: String,
@@ -58,6 +59,7 @@ pub struct Clock {
 }
 
 #[derive(Deserialize,Debug, Clone, Copy)]
+#[allow(non_snake_case)]
 pub struct StatDetail {
     pub accepted: f32,
     pub calculated: f32,
@@ -103,6 +105,7 @@ pub struct Cores {
 }
 
 #[derive(Deserialize, Debug, Clone)]
+#[allow(non_snake_case)]
 pub struct Algo {
     pub difficulty: f64,
     pub hashesPerDiff1: f64,
@@ -125,7 +128,6 @@ impl Algo {
 pub struct WebData {
     client: reqwest::blocking::Client,
     pub minerator: String,
-    version: i32,
     pub workers: Vec<Worker>,
 }
 
@@ -134,7 +136,6 @@ impl WebData {
         WebData {
             client: reqwest::blocking::Client::new(),
             minerator: "None".to_string(),
-            version: 0,
             workers: vec!(),
         }
     }
