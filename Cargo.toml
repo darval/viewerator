@@ -28,8 +28,7 @@ features = ["blocking","json"]
 # `gitlab`; `id` is optional; you can specify the appveyor project id if you
 # want to use that instead. `project_name` is optional; use when the repository
 # name differs from the appveyor project name.
-#appveyor = { repository = "darval/cli-bp", branch = "development", service = "github" }
-#travis-ci = { repository = "darval/cli-bp", branch = "development" }
+travis-ci = { repository = "darval/viewerator", branch = "development" }
 
 # Maintenance: `status` is required. Available options are:
 # - `actively-developed`: New features are being added and bugs are being fixed.
@@ -46,7 +45,7 @@ features = ["blocking","json"]
 #   the crate that the author does not want to fix).
 # - `none`: Displays no badge on crates.io, since the maintainer has not chosen to specify
 #   their intentions, potential crate users will need to investigate on their own.
-#maintenance = { status = "experimental" }
+maintenance = { status = "experimental" }
 [[test]]
 name = "cucumber"
 harness = false # Allows Cucumber to print output instead of libtest
