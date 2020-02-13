@@ -23,7 +23,7 @@ deploy:
     secure: "JzA5OxvMtcQbbWgj95SQEmPKnu4JGO7LUiwzUGA4SW/jt9u5UYCISMPQQx/6zyEJL9Q8QZa5Jwio66+P7vuqcsFoOqK1pEEWxFgf9l9/8YJXif0te2jdYPHfX1yfeKruV9GWNaHfaiKQItDh8Ug83Dn7Zf/ftTncv09hilNGOOUB9tx19TLpmodHQoj23NvoaszwD9CMQ3NfXFosp4j8LxWHieLOC82RGset4RCENVP6X0+/yOJ61KN72sGiit8eLLLsrz76GWWf6pRPaeOmhkOTNr5+TiOTNnYRKGqg/4yrmI5q6yrFb7zNWkOMU93NwSAukXq6utrsGTJND50EvG0WfAkgvTCr9J0YTv87pB/4A++2ovO8LHsRy7G/sreiQtjxwnxaerrENIsJUNqu+2Kb44MiE2GnzELtCC0oNLlNiBaDvbo6tgMnWwEnQ1glmzBt5NdCwqOxjmAojXg44siqNzQUtlc1iEbdyAupXfImSXmVx6jrCn3orwEeipurEn8aBeLVjzxObl66xs7RhAWZdAMAFfceMfjj6PfnroVAeOY0ZlO9jcvGRtpQeDQ+17M1O/lAJLQo9qOHOIJQsSJB2shczHswm21mg3l4NeflFRL0TKUmbF3Jyvo/3YH6VY4JAxq7avzcc26NSpCIlvi27WKlO/ywWEo1c7jdvDw="
   file_glob: true
   file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
-  file: target/release/$CRATE_NAME
+  file: target/release/viewerator
   skip_cleanup: true
   draft: true
 
