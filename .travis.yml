@@ -15,13 +15,13 @@ before_deploy:
     - git config --local user.name=Rick Duff
     - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
     - git tag $TRAVIS_TAG
-  deploy:
-    on:
-      tags: true
-    provider: releases
-    api_key:
-      secure: "i1LOZezRuLfia6vbHzXKvp8TKcosWzdo6OzZ8ItxuSPVPksTEwZLmQx6/ce7BvqNWSpAh1fO1r36Z2qqB30HpTdRSBEjoPGbucTNR+AYjMMYmQRZS7jDd5TATv5os8kQlzHVKHLI5VSy0Q/dOn0nbrLEcYpKrC4Gp+5GcnL9GKhgBaewprXylpYdMHFxJSnPpp1Rn5JsPZCiFQb8oX0xonegQVzjaYj//lT0UNV5/5pu1rvv1BEW7b5FG2LSdVSz890bMSMigix0/6lsEB127NoxIEz+nfgGmRlXmFQszs9TFkvt2KLRul63RpuIssybDLcsiC5l44f7JxtjAGv2rru0pVCRmLHcnGGwGgur8sEHenMbzKLbpcE/1E6ihTWG080mSYpLXEOZu6nMPs+Eo7Pwm1orRZulrTYbQoyNqr4JOE3MtxxlmXH8x9CIGQ/LjzUDPjRi4rY+c0hihiT2/uMV0MBzYTH0rMrBDFmt4ua/NZhegvrci2HmkMxonDhXMg64PxEh4++I9WPjjo2wT7cqY7oi8YvAdgLC1dpMN/n0R2Qpp2l82xNWZYdERfSBYnuW5AicEo0mrI+evmoDu89qIYJm+ZCzioT1PlJ8ISuUiwLcdAMcekkxKrEW3BymHHpa4MNOQgISS08hVXvB0f4wgH1w0WKdRsTPnWEdmz4="
-    file_glob: true
-    file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
-    skip_cleanup: true
-    draft: true
+deploy:
+  on:
+    tags: true
+  provider: releases
+  api_key:
+    secure: "i1LOZezRuLfia6vbHzXKvp8TKcosWzdo6OzZ8ItxuSPVPksTEwZLmQx6/ce7BvqNWSpAh1fO1r36Z2qqB30HpTdRSBEjoPGbucTNR+AYjMMYmQRZS7jDd5TATv5os8kQlzHVKHLI5VSy0Q/dOn0nbrLEcYpKrC4Gp+5GcnL9GKhgBaewprXylpYdMHFxJSnPpp1Rn5JsPZCiFQb8oX0xonegQVzjaYj//lT0UNV5/5pu1rvv1BEW7b5FG2LSdVSz890bMSMigix0/6lsEB127NoxIEz+nfgGmRlXmFQszs9TFkvt2KLRul63RpuIssybDLcsiC5l44f7JxtjAGv2rru0pVCRmLHcnGGwGgur8sEHenMbzKLbpcE/1E6ihTWG080mSYpLXEOZu6nMPs+Eo7Pwm1orRZulrTYbQoyNqr4JOE3MtxxlmXH8x9CIGQ/LjzUDPjRi4rY+c0hihiT2/uMV0MBzYTH0rMrBDFmt4ua/NZhegvrci2HmkMxonDhXMg64PxEh4++I9WPjjo2wT7cqY7oi8YvAdgLC1dpMN/n0R2Qpp2l82xNWZYdERfSBYnuW5AicEo0mrI+evmoDu89qIYJm+ZCzioT1PlJ8ISuUiwLcdAMcekkxKrEW3BymHHpa4MNOQgISS08hVXvB0f4wgH1w0WKdRsTPnWEdmz4="
+  file_glob: true
+  file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+  skip_cleanup: true
+  draft: true
