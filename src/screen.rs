@@ -63,6 +63,7 @@ impl Screen {
         init_pair(HEALTH_COLOR_SLOWDECREASE, pancurses::COLOR_WHITE, pancurses::COLOR_MAGENTA);
         init_pair(HEALTH_COLOR_CRITICAL, pancurses::COLOR_WHITE, pancurses::COLOR_RED);
 
+        pancurses::set_title(&*format!("Viewerator v{}", clap::crate_version!()) );
         self.window.printw(format!("Viewerator v{}, press delete to exit    ", clap::crate_version!()));
         let attr = self.set_text_colors(&"critical".to_string());
         self.window.printw(" --- ");
