@@ -20,6 +20,18 @@ fn main() {
             .value_name("DIR")
             .help("Sets a custom config directory")
             )
+        .arg(clap::Arg::with_name("log_level")
+            .short("l")
+            .long("log_level")
+            .value_name("debug|info|warn|error")
+            .help("Sets the log level (default info) for the viewerator.log in the config directory")
+            )
+            .arg(clap::Arg::with_name("input_file")
+            .short("f")
+            .long("input_file")
+            .value_name("FILE")
+            .help("Read JSON from file rather than http://localhost/api/status")
+            )
         .get_matches();
     init_logging(&matches);
 
@@ -40,10 +52,19 @@ fn init_logging<'a>(matches: &clap::ArgMatches<'a> ) {
         fs::create_dir_all(&config_dir).unwrap();
         created_dir = true;
     }
+    let default_log_level = "info";
+    let log_level = match matches.value_of("log_level").unwrap_or(&default_log_level) {
+        "info" => LevelFilter::Info,
+        "debug" => LevelFilter::Debug,
+        "warn" => LevelFilter::Warn,
+        "error" => LevelFilter::Error,
+        _ => LevelFilter::Debug,
+    };
+
     CombinedLogger::init(vec![
         TermLogger::new(LevelFilter::Warn, Config::default(), TerminalMode::Mixed).unwrap(),
         WriteLogger::new(
-            LevelFilter::Debug,
+            log_level,
             Config::default(),
             OpenOptions::new()
                 .create(true)
@@ -53,7 +74,7 @@ fn init_logging<'a>(matches: &clap::ArgMatches<'a> ) {
         ),
     ])
     .unwrap();
-    info!("Logging started for v{} of {}", version, appname);
+    info!("Logging started for v{} of {}, log level: {}", version, appname, log_level);
     if created_dir {
         info!("Created new config directory: {}", config_dir);
     }

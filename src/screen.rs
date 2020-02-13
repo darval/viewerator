@@ -96,10 +96,11 @@ impl Screen {
             match self.window.getch() {
                 Some(Input::Character(c)) => { 
                     if c.is_ascii_digit() {
-                        let w = c.to_digit(10).unwrap()
+                        let w: usize = c.to_digit(10).unwrap()
                                             .try_into().unwrap();
-                        if w < self.wd.workers.len() {
-                            self.current_worker = w;
+                        if w <= self.wd.workers.len() {
+                            self.current_worker = w - 1;
+                            info!("Showing device {}", w - 1);
                         }
                     }
                 },
@@ -108,7 +109,7 @@ impl Screen {
                 None => { self.update_screen(&matches); }
             }
         }
-     
+        info!("Exiting..");
     }
 
     pub fn update_screen<'a>(&mut self, matches: &clap::ArgMatches<'a>)  {
@@ -117,6 +118,7 @@ impl Screen {
         debug!("Updating screen");
         self.window.mvprintw(0, self.x - 20, format!("Minerator: {}", self.wd.minerator));
         debug!("Numer of devices = {}", self.wd.workers.len());
+        self.draw_devices(1, 30);
         for (i, w) in self.wd.workers.iter().enumerate() {
             if i == self.current_worker {
                 self.window.mvprintw(2, 0, format!("DNA: {}", w.dna));
@@ -175,7 +177,7 @@ impl Screen {
     }
 
     fn calc_total(stat: webdata::StatDetail, val: f32) -> f32 {
-        let div:f32 = ((stat.endTime-stat.startTime)/1000000000) as f32;
+        let div:f32 = ((stat.endTime-stat.startTime)/1000000000.0) as f32;
         val / div 
     }
 
@@ -213,6 +215,20 @@ impl Screen {
         }
         self.window.attron(attr);
         attr
+    }
+
+    fn draw_devices(&self, y: i32, x: i32) {
+        self.window.mvprintw(y, x, " Current device is highlighted: ");
+        for (i,_) in self.wd.workers.iter().enumerate() {
+            let mut attr = pancurses::A_NORMAL;
+            if self.current_worker == i {
+                attr = pancurses::A_BOLD|pancurses::A_UNDERLINE;
+            }
+            self.window.attron(attr);
+            self.window.printw(format!("{}", i+1));
+            self.window.attroff(attr);
+            self.window.printw("  ");
+        }
     }
 
     fn draw_sysmons(&self, y: i32, x: i32, sysmons: &webdata::SysMons) {
