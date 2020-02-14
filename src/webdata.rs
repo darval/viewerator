@@ -188,7 +188,7 @@ impl WebData {
         }
     }
 
-    fn process_response(&mut self, response: String) {
+    pub fn process_response(&mut self, response: String) {
         let blob: serde_json::Value = match serde_json::from_str(&response) {
             Ok(blob) => blob,
             Err(err) => {
@@ -237,7 +237,7 @@ impl WebData {
             serde_json::Value::Object(thing) => {
                 for o in thing.iter().enumerate() {
                     let (_, dev) = o;
-                    let (name, device) = dev;
+                    let (_name, device) = dev;
                     match &device["devices"] {
                         serde_json::Value::Array(workers) => {
                             for w in workers {

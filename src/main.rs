@@ -1,13 +1,12 @@
-#![feature(process_exitcode_placeholder,termination_trait_lib)]
 use std::fs::OpenOptions;
 use std::fs;
 use std::path::Path;
 use simplelog::*;
 use log::*;
 use pancurses::endwin;
+use mylib::webdata;
+use mylib::screen;
 
-mod screen;
-mod webdata;
 
 fn main() {
     let matches = clap::App::new(clap::crate_name!())

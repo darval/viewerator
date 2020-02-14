@@ -130,8 +130,8 @@ impl Screen {
         }
         for (i, w) in self.wd.workers.iter().enumerate() {
             if i == self.current_worker {
-                self.window.mvprintw(2, 0, format!("DNA:  {}", w.dna));
-                self.window.mvprintw(3, 0, format!("Name: {}", w.name));
+                self.window.mvprintw(2, 0, format!("HWUID: {}", w.dna));
+                self.window.mvprintw(3, 0, format!("Name:  {}", w.name));
 
                 self.window.mv(4,0);
                 self.window.hline(ACS_HLINE(), 24);
@@ -140,24 +140,24 @@ impl Screen {
                 self.window.mvprintw(5, 16, format!("{}", Screen::float_to_string3(w.input_power)));
                 self.window.attroff(attr);
 
-                self.window.mvprintw(6,0, "AUX Current");
-                let attr = self.set_text_colors(&w.aux_current_health);
-                self.window.mvprintw(6, 16, format!("{}", Screen::float_to_string3(w.aux_current)));
-                self.window.attroff(attr);
-
-                self.window.mvprintw(7,0, "PEX Current");
-                let attr = self.set_text_colors(&w.pex_current_health);
-                self.window.mvprintw(7, 16, format!("{}", Screen::float_to_string3(w.pex_current)));
-                self.window.attroff(attr);
-
-                self.window.mvprintw(8,0, "AUX 12V");
+                self.window.mvprintw(6,0, "AUX 12V");
                 let attr = self.set_text_colors(&w.aux_12v_health);
-                self.window.mvprintw(8, 16, format!("{}", Screen::float_to_string3(w.aux_12v)));
+                self.window.mvprintw(6, 16, format!("{}", Screen::float_to_string3(w.aux_12v)));
                 self.window.attroff(attr);
 
-                self.window.mvprintw(9,0, "PEX 12V");
+                self.window.mvprintw(7,0, "AUX Current");
+                let attr = self.set_text_colors(&w.aux_current_health);
+                self.window.mvprintw(7, 16, format!("{}", Screen::float_to_string3(w.aux_current)));
+                self.window.attroff(attr);
+
+                self.window.mvprintw(8,0, "PEX 12V");
                 let attr = self.set_text_colors(&w.pex_12v_health);
-                self.window.mvprintw(9, 16, format!("{}", Screen::float_to_string3(w.pex_12v)));
+                self.window.mvprintw(8, 16, format!("{}", Screen::float_to_string3(w.pex_12v)));
+                self.window.attroff(attr);
+
+                self.window.mvprintw(9,0, "PEX Current");
+                let attr = self.set_text_colors(&w.pex_current_health);
+                self.window.mvprintw(9, 16, format!("{}", Screen::float_to_string3(w.pex_current)));
                 self.window.attroff(attr);
 
                 self.window.mvprintw(10,0, "VCCINT");
