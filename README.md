@@ -10,4 +10,7 @@ based status app so I only need on remote tunnel to both view and manipulate the
 Viewerator is a console app which you can install in your /usr/local/bin directory and call when you ssh into your host. (It can be installed
 anywhere as it is stand alone app).  
 
+The terminal you run it in must be at least 126x26 characters in size.  No vt100's with 80x24 allowed. :)  If you have multiple cards, you
+can select the displayed card selected 1-n where n is the last card. This will only work for your first 9 cards.
+
 It is a work in progress and with all the normal caveats, use it and see if it is useful to you.
