@@ -64,6 +64,45 @@ impl Screen {
         init_pair(HEALTH_COLOR_CRITICAL, pancurses::COLOR_WHITE, pancurses::COLOR_RED);
 
         pancurses::set_title(&*format!("Viewerator v{}", clap::crate_version!()) );
+        self.window.keypad(true);
+        self.window.timeout(1000);
+        cbreak();
+        noecho();     
+
+        self.window.refresh();
+    }
+
+    pub fn mainloop<'a>(&mut self, matches: &clap::ArgMatches<'a>) {
+        loop {
+            match self.window.getch() {
+                Some(Input::Character(c)) => { 
+                    if c.is_ascii_digit() {
+                        let w: usize = c.to_digit(10).unwrap()
+                                            .try_into().unwrap();
+                        if w <= self.wd.workers.len() {
+                            if self.wd.workers[self.current_worker].hw_type !=
+                                self.wd.workers[w - 1].hw_type {
+                                    self.window.erase();
+                                }
+                            self.current_worker = w - 1;
+                            info!("Showing device {}", w - 1);
+                            self.update_screen(&matches);
+                        }
+                    }
+                },
+                Some(Input::KeyDC) => break,
+                Some(_input) => {}, // ignore
+                None => { self.update_screen(&matches); }
+            }
+            self.window.refresh();
+        }
+        info!("Exiting..");
+    }
+
+    pub fn update_screen<'a>(&mut self, matches: &clap::ArgMatches<'a>)  {
+        debug!("Getting data");
+        self.wd.getdata(matches);
+        debug!("Updating screen");
         self.window.printw(format!("Viewerator v{}, press delete to exit    ", clap::crate_version!()));
         let attr = self.set_text_colors(&"critical".to_string());
         self.window.printw(" --- ");
@@ -83,39 +122,6 @@ impl Screen {
 
         self.window.hline(ACS_HLINE(), self.x);
 
-        self.window.keypad(true);
-        self.window.timeout(1000);
-        cbreak();
-        noecho();     
-
-        self.window.refresh();
-    }
-
-    pub fn mainloop<'a>(&mut self, matches: &clap::ArgMatches<'a>) {
-        loop {
-            match self.window.getch() {
-                Some(Input::Character(c)) => { 
-                    if c.is_ascii_digit() {
-                        let w: usize = c.to_digit(10).unwrap()
-                                            .try_into().unwrap();
-                        if w <= self.wd.workers.len() {
-                            self.current_worker = w - 1;
-                            info!("Showing device {}", w - 1);
-                        }
-                    }
-                },
-                Some(Input::KeyDC) => break,
-                Some(_input) => {}, // ignore
-                None => { self.update_screen(&matches); }
-            }
-        }
-        info!("Exiting..");
-    }
-
-    pub fn update_screen<'a>(&mut self, matches: &clap::ArgMatches<'a>)  {
-        debug!("Getting data");
-        self.wd.getdata(matches);
-        debug!("Updating screen");
         self.window.mvprintw(0, self.x - 20, format!("Minerator: {}", self.wd.minerator));
         debug!("Numer of devices = {}", self.wd.workers.len());
         self.draw_devices(1, 30);
@@ -163,7 +169,9 @@ impl Screen {
                 let attr = self.set_text_colors(&w.vrctrl_temp_health);
                 self.window.mvprintw(12, 16, format!("{}", Screen::float_to_string3(w.vrctrl_temp)));
                 self.window.attroff(attr);
-                self.draw_phases(4, 26, &w);
+                if w.hw_type == webdata::HWTYPE_BCU {
+                    self.draw_phases(4, 26, &w);
+                }
                 self.draw_sysmons(9, 50, &w.sysmons);
                 for (_num, core) in w.cores.cores.iter().enumerate() {
                     self.draw_clock(4, 50, &core.clock);
