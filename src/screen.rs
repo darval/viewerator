@@ -123,11 +123,14 @@ impl Screen {
         self.window.hline(ACS_HLINE(), self.x);
 
         self.window.mvprintw(0, self.x - 20, format!("Minerator: {}", self.wd.minerator));
-        debug!("Numer of devices = {}", self.wd.workers.len());
-        self.draw_devices(1, 30);
+        let num_devices = self.wd.workers.len();
+        debug!("Numer of devices = {}", num_devices);
+        if num_devices != 1 {
+            self.draw_devices(1, 30);
+        }
         for (i, w) in self.wd.workers.iter().enumerate() {
             if i == self.current_worker {
-                self.window.mvprintw(2, 0, format!("DNA: {}", w.dna));
+                self.window.mvprintw(2, 0, format!("DNA:  {}", w.dna));
                 self.window.mvprintw(3, 0, format!("Name: {}", w.name));
 
                 self.window.mv(4,0);
@@ -240,18 +243,19 @@ impl Screen {
     }
 
     fn draw_sysmons(&self, y: i32, x: i32, sysmons: &webdata::SysMons) {
-        let line_length: i32 =  (20 * sysmons.sysmon.len()).try_into().unwrap();
+        let line_length: i32 =  (16 * sysmons.sysmon.len()).try_into().unwrap();
         self.window.mv(y,x);
         self.window.hline(ACS_HLINE(), line_length);
         for (num, sysmon) in sysmons.sysmon.iter().enumerate() {
-            let mut column_offset: i32 = (num * 20).try_into().unwrap();
+            let mut column_offset: i32 = (num * 16).try_into().unwrap();
             column_offset += x;
             self.window.mvprintw(y+1, column_offset, format!("Sysmon {}", num));
+            self.window.mvprintw(y+2, column_offset, "temp");
+            self.window.mvprintw(y+3, column_offset, "vccint");
             let attr = self.set_text_colors(&sysmon.health);
-            self.window.mvprintw(y+2,column_offset, format!("{}", Screen::float_to_string3(sysmon.temperature)));
+            self.window.mvprintw(y+2,column_offset+7, format!("{}", Screen::float_to_string3(sysmon.temperature)));
             self.window.attroff(attr);
-            self.window.mvprintw(y+2, column_offset + 9, "degrees");
-            self.window.mvprintw(y+3,column_offset, format!("{} volts", Screen::float_to_string3(sysmon.vccint)));
+            self.window.mvprintw(y+3,column_offset+7, format!("{}", Screen::float_to_string3(sysmon.vccint)));
         }
 
     }
@@ -260,8 +264,8 @@ impl Screen {
         self.window.mv(y,x);
         self.window.hline(ACS_HLINE(), 22);
 
-        self.window.mvprintw(y+1, x, "Phase 0");
-        self.window.mvprintw(y+2, x, "statusGlobal");
+        self.window.mvprintw(y+1, x, "LTC3884 Phase 0");
+        self.window.mvprintw(y+2, x, "Global status");
         self.window.mvprintw(y+2, x+14, format!("{:#08x}", w.phase0_status_global));
         self.window.mvprintw(y+3, x, "temperature");
         let attr = self.set_text_colors(&w.phase0_temperature_health);
@@ -270,8 +274,8 @@ impl Screen {
         self.window.mvprintw(y+4, x, "vout");
         self.window.mvprintw(y+4, x+14, format!("{}", Screen::float_to_string3(w.phase0_vout)));
 
-        self.window.mvprintw(y+5, x, "Phase 1");
-        self.window.mvprintw(y+6, x, "statusGlobal");
+        self.window.mvprintw(y+5, x, "LTC3884 Phase 1");
+        self.window.mvprintw(y+6, x, "Global status");
         self.window.mvprintw(y+6, x+14, format!("{:#08x}", w.phase1_status_global));
         self.window.mvprintw(y+7, x, "temperature");
         let attr = self.set_text_colors(&w.phase1_temperature_health);

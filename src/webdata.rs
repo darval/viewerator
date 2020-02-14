@@ -238,7 +238,6 @@ impl WebData {
                 for o in thing.iter().enumerate() {
                     let (_, dev) = o;
                     let (name, device) = dev;
-                    info!("Work manager - '{}", name);
                     match &device["devices"] {
                         serde_json::Value::Array(workers) => {
                             for w in workers {
@@ -246,7 +245,7 @@ impl WebData {
                                     "\"4277c013\"" => HWTYPE_CVP,
                                     "\"69581525\"" => HWTYPE_BCU,
                                     _ => {
-                                        info!("Unknown hw type: '{}'", w["hwType"].to_string());
+                                        debug!("Unknown hw type: '{}'", w["hwType"].to_string());
                                         HWTYPE_BCU
                                     } // assume unknown is BCU
                                 };
