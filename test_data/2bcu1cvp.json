@@ -1,0 +1,501 @@
+{
+  "configId": "file:///home/theseven/minerator/configs/custom/ckbv2_pwropt.json",
+  "fee": {
+    "allmine-fee-v1": [
+      {
+        "algo": {
+          "eaglesong": {
+            "algo": "eaglesong",
+            "difficulty": 64000000255,
+            "stats": {
+              "minute": {
+                "accepted": 0,
+                "calculated": 0,
+                "endTime": 167922588566595,
+                "found": 0,
+                "requested": 0,
+                "startTime": 167862559475346,
+                "submitted": 0,
+                "valid": 0
+              },
+              "name": "Eaglesong fee",
+              "total": {
+                "accepted": 64576000.256403,
+                "calculated": 67436533.536768,
+                "endTime": 167922588566595,
+                "found": 69084285.41952,
+                "requested": 0,
+                "startTime": 148655278100266,
+                "submitted": 65024000.258188,
+                "valid": 67221350.46144
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "minerator": "00.00.00",
+  "version": 0,
+  "workers": {
+    "bcu-09": {
+      "devices": [
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 11.529,
+              "aux12VCurrent": 11.772,
+              "aux3V3": 3.35,
+              "auxTemperature": [
+                44,
+                62,
+                44
+              ],
+              "ddr4vppBtm": 2.5,
+              "ddr4vppTop": 2.5,
+              "dimmTemperature": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "fanSpeed": 0,
+              "fanTemperature": 44,
+              "fpgaTemperature": 46,
+              "inputPower": 167.101068,
+              "mgt0V9avcc": 0.93,
+              "mgtavtt": 1.223,
+              "pex12V": 11.887,
+              "pex12VCurrent": 2.64,
+              "pex3V3": 3.395,
+              "pex3V3Current": 0,
+              "sw12V": 11.503,
+              "sys5V5": 5.528,
+              "vcc0V85": 0.875,
+              "vcc1V2Top": 1.2,
+              "vcc1V8": 1.874,
+              "vccint": 0.611,
+              "vccintCurrent": 164.25
+            },
+            "health": {
+              "inputCurrentAUX": "rampUp",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "rampUp",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "rampUp",
+              "vccintVoltageDrop": "rampUp",
+              "vrCtrl": "rampUp",
+              "vrPower": "rampUp"
+            },
+            "ichip": 8.25,
+            "iin": 2.0390625,
+            "iinPeak": 2.06640625,
+            "phases": [
+              {
+                "iout": 26.96875,
+                "ioutPeak": 27.09375,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 32,
+                "temperature": 69.75,
+                "temperaturePeak": 69.875,
+                "vout": 0.611083984375,
+                "voutPeak": 0.611572265625
+              },
+              {
+                "iout": 27.78125,
+                "ioutPeak": 27.78125,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 32,
+                "temperature": 66.25,
+                "temperaturePeak": 67.5,
+                "vout": 0.611328125,
+                "voutPeak": 0.611572265625
+              }
+            ],
+            "powerLevel": 225,
+            "statusCML": 0,
+            "statusInput": 0,
+            "temperature": 70.125,
+            "temperaturePeak": 71,
+            "vccintPhases": 6,
+            "vccintSetpoint": 0.61,
+            "vin": 11.828125,
+            "vinPeak": 11.828125
+          },
+          "canRestart": true,
+          "cores": [
+            {
+              "algo": "eaglesong",
+              "clock": {
+                "badNonces": 0,
+                "health": "hold",
+                "multiplier": 0.6240234375,
+                "totalNonces": 20.6385716356344
+              },
+              "driver": "allmine-pcie-scanning-core-v2",
+              "stats": {
+                "minute": {
+                  "accepted": 576000.000297,
+                  "calculated": 628633.757696,
+                  "endTime": 167922588566595,
+                  "found": 590555.7504,
+                  "requested": 721554.50556,
+                  "startTime": 167862559475346,
+                  "submitted": 576000.000297,
+                  "valid": 575523.422208
+                },
+                "name": "0000:09:00.0:10000",
+                "total": {
+                  "accepted": 195728000.158811,
+                  "calculated": 202283870.738432,
+                  "endTime": 167946363413109,
+                  "found": 202374865.760256,
+                  "requested": 224635379.46309,
+                  "startTime": 148655278100266,
+                  "submitted": 195792000.159066,
+                  "valid": 196943900.332032
+                }
+              }
+            }
+          ],
+          "driver": "allmine-pcie-shell-interface-v2",
+          "fwID": "69581525416c6c6d5365536800000035",
+          "fwType": "00000035",
+          "hwType": "69581525",
+          "hwUID": "400200000117ab284cf08085",
+          "name": "0000:09:00.0",
+          "operating": true,
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 45.072998046875,
+              "vccaux": 1.84975967040513,
+              "vccbram": 0.852323186083772,
+              "vccint": 0.591027695124743
+            },
+            {
+              "health": "rampUp",
+              "temperature": 43.9654235839844,
+              "vccaux": 1.8480201419089,
+              "vccbram": 0.851636530098421,
+              "vccint": 0.598077363241016
+            },
+            {
+              "health": "rampUp",
+              "temperature": 45.6461486816406,
+              "vccaux": 1.84834058136873,
+              "vccbram": 0.852002746623941,
+              "vccint": 0.592309452964065
+            }
+          ],
+          "voltage": 0.611083984375
+        }
+      ],
+      "driver": "allmine-pcie-mcap"
+    },
+    "bcu-0b": {
+      "devices": [
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 11.92,
+              "aux12VCurrent": 14.251,
+              "aux3V3": 3.305,
+              "auxTemperature": [
+                43,
+                63,
+                42
+              ],
+              "ddr4vppBtm": 2.5,
+              "ddr4vppTop": 2.5,
+              "dimmTemperature": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "fanSpeed": 0,
+              "fanTemperature": 43,
+              "fpgaTemperature": 42,
+              "inputPower": 206.338636,
+              "mgt0V9avcc": 0.935,
+              "mgtavtt": 1.226,
+              "pex12V": 11.836,
+              "pex12VCurrent": 3.081,
+              "pex3V3": 3.355,
+              "pex3V3Current": 0,
+              "sw12V": 11.698,
+              "sys5V5": 5.534,
+              "vcc0V85": 0.878,
+              "vcc1V2Top": 1.201,
+              "vcc1V8": 1.861,
+              "vccint": 0.661,
+              "vccintCurrent": 182.34375
+            },
+            "health": {
+              "inputCurrentAUX": "rampUp",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "rampUp",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "rampUp",
+              "vccintVoltageDrop": "rampUp",
+              "vrCtrl": "rampUp",
+              "vrPower": "rampUp"
+            },
+            "ichip": 9.5,
+            "iin": 2.55078125,
+            "iinPeak": 2.5703125,
+            "phases": [
+              {
+                "iout": 30.0625,
+                "ioutPeak": 30.15625,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 32,
+                "temperature": 73.875,
+                "temperaturePeak": 74.625,
+                "vout": 0.660888671875,
+                "voutPeak": 0.6611328125
+              },
+              {
+                "iout": 30.71875,
+                "ioutPeak": 30.75,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 32,
+                "temperature": 71,
+                "temperaturePeak": 71,
+                "vout": 0.66064453125,
+                "voutPeak": 0.6611328125
+              }
+            ],
+            "powerLevel": 225,
+            "statusCML": 0,
+            "statusInput": 0,
+            "temperature": 74.875,
+            "temperaturePeak": 75.125,
+            "vccintPhases": 6,
+            "vccintSetpoint": 0.66,
+            "vin": 11.75,
+            "vinPeak": 11.75
+          },
+          "canRestart": true,
+          "cores": [
+            {
+              "algo": "eaglesong",
+              "clock": {
+                "badNonces": 0.809727868221258,
+                "health": "hold",
+                "multiplier": 0.647977941176471,
+                "totalNonces": 22.2178640600853
+              },
+              "driver": "allmine-pcie-scanning-core-v2",
+              "stats": {
+                "minute": {
+                  "accepted": 640000.00033,
+                  "calculated": 654107.625472,
+                  "endTime": 167922588566595,
+                  "found": 607735.554048,
+                  "requested": 751619.276625,
+                  "startTime": 167862559475346,
+                  "submitted": 640000.00033,
+                  "valid": 586260.799488
+                },
+                "name": "0000:0b:00.0:10000",
+                "total": {
+                  "accepted": 204528000.186992,
+                  "calculated": 210443159.349248,
+                  "endTime": 167946367412915,
+                  "found": 210650162.429952,
+                  "requested": 224326141.81785,
+                  "startTime": 148655310098659,
+                  "submitted": 204784000.18779,
+                  "valid": 204974384.799744
+                }
+              }
+            }
+          ],
+          "driver": "allmine-pcie-shell-interface-v2",
+          "fwID": "69581525416c6c6d5365536800000035",
+          "fwType": "00000035",
+          "hwType": "69581525",
+          "hwUID": "40020000012922a64cd083c5",
+          "name": "0000:0b:00.0",
+          "operating": true,
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 43.7253112792969,
+              "vccaux": 1.82774090180819,
+              "vccbram": 0.851636530098421,
+              "vccint": 0.636530098420691
+            },
+            {
+              "health": "rampUp",
+              "temperature": 43.1908874511719,
+              "vccaux": 1.82682536049439,
+              "vccbram": 0.850537880521859,
+              "vccint": 0.64596017395285
+            },
+            {
+              "health": "rampUp",
+              "temperature": 44.5153198242188,
+              "vccaux": 1.82874799725338,
+              "vccbram": 0.852094300755322,
+              "vccint": 0.639642938887617
+            }
+          ],
+          "voltage": 0.660888671875
+        }
+      ],
+      "driver": "allmine-pcie-mcap"
+    },
+    "cvp-0a": {
+      "devices": [
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 11.7975,
+              "aux12VCurrent": 9.92,
+              "auxTemperature": [
+                55
+              ],
+              "inputPower": 241.18,
+              "pex12V": 11.8625,
+              "pex12VCurrent": 10.24,
+              "vccint": 0.61853,
+              "vccintCurrent": 302
+            },
+            "health": {
+              "inputCurrentAUX": "rampUp",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "rampUp",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "rampUp",
+              "vrPower": "rampUp"
+            }
+          },
+          "canRestart": true,
+          "cores": [
+            {
+              "algo": "eaglesong",
+              "clock": {
+                "badNonces": 0,
+                "health": "hold",
+                "multiplier": 1.96484375,
+                "totalNonces": 13.9941645358711
+              },
+              "driver": "allmine-pcie-scanning-core-v2",
+              "stats": {
+                "minute": {
+                  "accepted": 1024000.000528,
+                  "calculated": 895061.275648,
+                  "endTime": 167922588566595,
+                  "found": 870801.297408,
+                  "requested": 987842.47785,
+                  "startTime": 167862559475346,
+                  "submitted": 1024000.000528,
+                  "valid": 840736.641024
+                },
+                "name": "0000:0a:00.0:10000",
+                "total": {
+                  "accepted": 275360000.223158,
+                  "calculated": 287755858.992128,
+                  "endTime": 167946355413498,
+                  "found": 288068800.094208,
+                  "requested": 302047869.98817,
+                  "startTime": 148656558035993,
+                  "submitted": 275552000.223923,
+                  "valid": 280345404.616704
+                }
+              }
+            }
+          ],
+          "driver": "allmine-pcie-shell-interface-v2",
+          "fwID": "4277c013416c6c6d5365536800000024",
+          "fwType": "00000024",
+          "hwType": "4277c013",
+          "hwUID": "40020000011667863d9080c5",
+          "name": "0000:0a:00.0",
+          "operating": true,
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 45.1194763183594,
+              "vccaux": 1.76470588235294,
+              "vccbram": 0.844449530785077,
+              "vccint": 0.591577019913024
+            },
+            {
+              "health": "rampUp",
+              "temperature": 40.8052978515625,
+              "vccaux": 1.76383611810483,
+              "vccbram": 0.844220645456626,
+              "vccint": 0.60540169375143
+            },
+            {
+              "health": "rampUp",
+              "temperature": 44.0816040039062,
+              "vccaux": 1.76649118791485,
+              "vccbram": 0.845777065690089,
+              "vccint": 0.604669260700389
+            },
+            {
+              "health": "rampUp",
+              "temperature": 46.9396362304688,
+              "vccaux": 1.76868848706798,
+              "vccbram": 0.847791256580453,
+              "vccint": 0.598031586175326
+            }
+          ],
+          "voltage": 0.61853
+        }
+      ],
+      "driver": "allmine-pcie-mcap"
+    }
+  },
+  "worksources": {
+    "eaglesong": [
+      {
+        "algo": "eaglesong",
+        "difficulty": 64000000033,
+        "stats": {
+          "minute": {
+            "accepted": 2240000.001155,
+            "calculated": 2138889.831424,
+            "endTime": 167922588566595,
+            "found": 2066945.1264,
+            "requested": 2461016.260035,
+            "startTime": 167862559475346,
+            "submitted": 2240000.001155,
+            "valid": 2000373.387264
+          },
+          "name": "eaglesong.eu.nicehash.com:3381",
+          "total": {
+            "accepted": 611040000.312558,
+            "calculated": 616705002.30656,
+            "endTime": 167922588566595,
+            "found": 629979104.821248,
+            "requested": 751009391.26911,
+            "startTime": 148653618183621,
+            "submitted": 611104000.312591,
+            "valid": 613067735.605248
+          }
+        }
+      }
+    ]
+  }
+}

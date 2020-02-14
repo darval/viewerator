@@ -1,0 +1,672 @@
+{
+  "fee": {
+    "allmine-fee-v1": [
+      {
+        "algo": {
+          "eaglesong": {
+            "difficulty": 14.9011611938477,
+            "hashesPerDiff1": 4294967296,
+            "stats": {
+              "minute": {
+                "accepted": 0,
+                "calculated": 0,
+                "endTime": 50773581963402,
+                "found": 0,
+                "requested": 0,
+                "startTime": 50713575773357,
+                "submitted": 0,
+                "valid": 0
+              },
+              "name": "Eaglesong fee",
+              "total": {
+                "accepted": 248512000,
+                "calculated": 254278482.569216,
+                "endTime": 50773581963402,
+                "found": 258969884.950528,
+                "requested": 0,
+                "startTime": 170780521087,
+                "submitted": 249216000,
+                "valid": 252130954.838016
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "minerator": "00.00.00",
+  "version": 0,
+  "workers": {
+    "5708": {
+      "devices": [
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 11.8,
+              "aux12VCurrent": 20,
+              "aux3V3": 3.306,
+              "auxTemperature": [
+                39,
+                56,
+                39
+              ],
+              "ddr4vppBtm": 2.5,
+              "ddr4vppTop": 2.5,
+              "dimmTemperature": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "fanSpeed": 0,
+              "fanTemperature": 38,
+              "fpgaTemperature": 41,
+              "inputPower": 281.753389,
+              "mgt0V9avcc": 0.935,
+              "mgtavtt": 1.228,
+              "pex12V": 11.783,
+              "pex12VCurrent": 3.883,
+              "pex3V3": 3.395,
+              "pex3V3Current": 0,
+              "sw12V": 11.78,
+              "sys5V5": 5.619,
+              "vcc0V85": 0.879,
+              "vcc1V2Top": 1.211,
+              "vcc1V8": 1.882,
+              "vccint": 0.714,
+              "vccintCurrent": 191.25
+            },
+            "health": {
+              "inputCurrentAUX": "slowIncrease",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "slowIncrease",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "rampUp",
+              "vrCtrl": "rampUp",
+              "vrPower": "rampUp"
+            },
+            "ichip": 11.46875,
+            "iin": 3.4765625,
+            "iinPeak": 3.53515625,
+            "phases": [
+              {
+                "iout": 31.875,
+                "ioutPeak": 32.375,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 16,
+                "temperature": 56.4375,
+                "temperaturePeak": 56.4375,
+                "vout": 0.71337890625,
+                "voutPeak": 0.71484375
+              },
+              {
+                "iout": 30.71875,
+                "ioutPeak": 31.0625,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 16,
+                "temperature": 56.0625,
+                "temperaturePeak": 56.125,
+                "vout": 0.7138671875,
+                "voutPeak": 0.714599609375
+              }
+            ],
+            "powerLevel": 225,
+            "statusCML": 0,
+            "statusInput": 0,
+            "temperature": 64.625,
+            "temperaturePeak": 72.75,
+            "vccintPhases": 6,
+            "vin": 11.734375,
+            "vinPeak": 11.734375
+          },
+          "canRestart": false,
+          "cores": [
+            {
+              "clock": {
+                "badNonces": 1.42979976970753,
+                "health": "hold",
+                "multiplier": 0.7109375,
+                "totalNonces": 69.7595564330978
+              },
+              "stats": {
+                "minute": {
+                  "accepted": 1280000,
+                  "calculated": 719323.738112,
+                  "endTime": 50773581963402,
+                  "found": 730949.746688,
+                  "requested": 790273.982464,
+                  "startTime": 50713575773357,
+                  "submitted": 1280000,
+                  "valid": 710817.087488
+                },
+                "name": "0000:03:00.0:10000",
+                "total": {
+                  "accepted": 582912000,
+                  "calculated": 601915113.232384,
+                  "endTime": 50774357939997,
+                  "found": 601803032.887296,
+                  "requested": 603795092.406272,
+                  "startTime": 178652299179,
+                  "submitted": 587520000,
+                  "valid": 586799906.816
+                }
+              }
+            }
+          ],
+          "dna": "400200000128a70645906245",
+          "name": "0000:03:00.0",
+          "operating": true,
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 44.0119018554688,
+              "vccaux": 1.84321355001144,
+              "vccbram": 0.847745479514763,
+              "vccint": 0.686472877088579
+            },
+            {
+              "health": "rampUp",
+              "temperature": 41.0376586914062,
+              "vccaux": 1.84138246738384,
+              "vccbram": 0.846463721675441,
+              "vccint": 0.696498054474708
+            },
+            {
+              "health": "rampUp",
+              "temperature": 43.74853515625,
+              "vccaux": 1.84092469672694,
+              "vccbram": 0.846875715266651,
+              "vccint": 0.688349736781872
+            }
+          ],
+          "voltage": 0.71337890625
+        },
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 11.679,
+              "aux12VCurrent": 18.675,
+              "aux3V3": 3.287,
+              "auxTemperature": [
+                40,
+                52,
+                40
+              ],
+              "ddr4vppBtm": 2.5,
+              "ddr4vppTop": 2.5,
+              "dimmTemperature": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "fanSpeed": 0,
+              "fanTemperature": 40,
+              "fpgaTemperature": 39,
+              "inputPower": 264.786745,
+              "mgt0V9avcc": 0.94,
+              "mgtavtt": 1.226,
+              "pex12V": 11.729,
+              "pex12VCurrent": 3.98,
+              "pex3V3": 3.401,
+              "pex3V3Current": 0,
+              "sw12V": 11.786,
+              "sys5V5": 5.523,
+              "vcc0V85": 0.878,
+              "vcc1V2Top": 1.203,
+              "vcc1V8": 1.859,
+              "vccint": 0.714,
+              "vccintCurrent": 219
+            },
+            "health": {
+              "inputCurrentAUX": "rampUp",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "rampUp",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "rampUp",
+              "vrCtrl": "rampUp",
+              "vrPower": "rampUp"
+            },
+            "ichip": 11.171875,
+            "iin": 3.421875,
+            "iinPeak": 3.44140625,
+            "phases": [
+              {
+                "iout": 36.5,
+                "ioutPeak": 36.625,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 16,
+                "temperature": 53.3125,
+                "temperaturePeak": 53.5625,
+                "vout": 0.712646484375,
+                "voutPeak": 0.714111328125
+              },
+              {
+                "iout": 36.125,
+                "ioutPeak": 36.1875,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 16,
+                "temperature": 53.0625,
+                "temperaturePeak": 54.125,
+                "vout": 0.712646484375,
+                "voutPeak": 0.714111328125
+              }
+            ],
+            "powerLevel": 225,
+            "statusCML": 0,
+            "statusInput": 0,
+            "temperature": 64.75,
+            "temperaturePeak": 65.125,
+            "vccintPhases": 6,
+            "vin": 11.65625,
+            "vinPeak": 11.671875
+          },
+          "canRestart": false,
+          "cores": [
+            {
+              "clock": {
+                "badNonces": 1.35475287612783,
+                "health": "hold",
+                "multiplier": 0.758928571428571,
+                "totalNonces": 73.4633750252294
+              },
+              "stats": {
+                "minute": {
+                  "accepted": 640000,
+                  "calculated": 763787.143168,
+                  "endTime": 50773581963402,
+                  "found": 767456.968704,
+                  "requested": 824633.720832,
+                  "startTime": 50713575773357,
+                  "submitted": 640000,
+                  "valid": 748934.92224
+                },
+                "name": "0000:02:00.0:10000",
+                "total": {
+                  "accepted": 624064000,
+                  "calculated": 643599433.852928,
+                  "endTime": 50774353940118,
+                  "found": 643323287.044096,
+                  "requested": 600754255.560704,
+                  "startTime": 179200284571,
+                  "submitted": 627904000,
+                  "valid": 626855040.253952
+                }
+              }
+            }
+          ],
+          "dna": "40020000012303a80cb0c545",
+          "name": "0000:02:00.0",
+          "operating": true,
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 42.2691650390625,
+              "vccaux": 1.82298008697642,
+              "vccbram": 0.848523689631495,
+              "vccint": 0.684046692607004
+            },
+            {
+              "health": "rampUp",
+              "temperature": 38.7992858886719,
+              "vccaux": 1.82156099794003,
+              "vccbram": 0.847882810711833,
+              "vccint": 0.694666971847105
+            },
+            {
+              "health": "rampUp",
+              "temperature": 44.6005249023438,
+              "vccaux": 1.82476539253834,
+              "vccbram": 0.849485008010986,
+              "vccint": 0.687708857862211
+            }
+          ],
+          "voltage": 0.712646484375
+        },
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 11.813,
+              "aux12VCurrent": 17.046,
+              "aux3V3": 3.279,
+              "auxTemperature": [
+                38,
+                49,
+                37
+              ],
+              "ddr4vppBtm": 2.5,
+              "ddr4vppTop": 2.5,
+              "dimmTemperature": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "fanSpeed": 0,
+              "fanTemperature": 36,
+              "fpgaTemperature": 37,
+              "inputPower": 243.441678,
+              "mgt0V9avcc": 0.93,
+              "mgtavtt": 1.219,
+              "pex12V": 11.76,
+              "pex12VCurrent": 3.578,
+              "pex3V3": 3.403,
+              "pex3V3Current": 0,
+              "sw12V": 11.734,
+              "sys5V5": 5.546,
+              "vcc0V85": 0.873,
+              "vcc1V2Top": 1.206,
+              "vcc1V8": 1.875,
+              "vccint": 0.714,
+              "vccintCurrent": 198
+            },
+            "health": {
+              "inputCurrentAUX": "rampUp",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "rampUp",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "rampUp",
+              "vrCtrl": "rampUp",
+              "vrPower": "rampUp"
+            },
+            "ichip": 10.59375,
+            "iin": 3.11328125,
+            "iinPeak": 3.14453125,
+            "phases": [
+              {
+                "iout": 33,
+                "ioutPeak": 33.0625,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 16,
+                "temperature": 51.9375,
+                "temperaturePeak": 52.4375,
+                "vout": 0.713134765625,
+                "voutPeak": 0.7138671875
+              },
+              {
+                "iout": 32.875,
+                "ioutPeak": 33,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 16,
+                "temperature": 52.0625,
+                "temperaturePeak": 52.6875,
+                "vout": 0.713134765625,
+                "voutPeak": 0.713623046875
+              }
+            ],
+            "powerLevel": 225,
+            "statusCML": 0,
+            "statusInput": 0,
+            "temperature": 61.0625,
+            "temperaturePeak": 61.4375,
+            "vccintPhases": 6,
+            "vin": 11.65625,
+            "vinPeak": 11.65625
+          },
+          "canRestart": false,
+          "cores": [
+            {
+              "clock": {
+                "badNonces": 3.44083415098787,
+                "health": "slowDecrease",
+                "multiplier": 0.712962962962963,
+                "totalNonces": 37.0176368796767
+              },
+              "stats": {
+                "minute": {
+                  "accepted": 768000,
+                  "calculated": 719206.053888,
+                  "endTime": 50773581963402,
+                  "found": 727460.08576,
+                  "requested": 785979.015168,
+                  "startTime": 50713575773357,
+                  "submitted": 768000,
+                  "valid": 707864.297472
+                },
+                "name": "0000:01:00.0:10000",
+                "total": {
+                  "accepted": 566464000,
+                  "calculated": 605313548.335104,
+                  "endTime": 50774357939997,
+                  "found": 604658112.397312,
+                  "requested": 605190956.777472,
+                  "startTime": 170780521087,
+                  "submitted": 571584000,
+                  "valid": 589389772.095488
+                }
+              }
+            }
+          ],
+          "dna": "40020000012303a804a02485",
+          "name": "0000:01:00.0",
+          "operating": true,
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 41.8276977539062,
+              "vccaux": 1.84211490043488,
+              "vccbram": 0.848157473105974,
+              "vccint": 0.686564431219959
+            },
+            {
+              "health": "rampUp",
+              "temperature": 37.9162902832031,
+              "vccaux": 1.84357976653696,
+              "vccbram": 0.849210345616846,
+              "vccint": 0.69768825818265
+            },
+            {
+              "health": "rampUp",
+              "temperature": 40.3251037597656,
+              "vccaux": 1.84426642252232,
+              "vccbram": 0.849439230945296,
+              "vccint": 0.690409704737926
+            }
+          ],
+          "voltage": 0.713134765625
+        },
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 11.816,
+              "aux12VCurrent": 17.871,
+              "aux3V3": 3.3,
+              "auxTemperature": [
+                39,
+                50,
+                39
+              ],
+              "ddr4vppBtm": 2.5,
+              "ddr4vppTop": 2.5,
+              "dimmTemperature": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "fanSpeed": 0,
+              "fanTemperature": 39,
+              "fpgaTemperature": 38,
+              "inputPower": 257.718761,
+              "mgt0V9avcc": 0.926,
+              "mgtavtt": 1.22,
+              "pex12V": 11.825,
+              "pex12VCurrent": 3.937,
+              "pex3V3": 3.358,
+              "pex3V3Current": 0,
+              "sw12V": 11.767,
+              "sys5V5": 5.532,
+              "vcc0V85": 0.876,
+              "vcc1V2Top": 1.207,
+              "vcc1V8": 1.877,
+              "vccint": 0.714,
+              "vccintCurrent": 222.375
+            },
+            "health": {
+              "inputCurrentAUX": "rampUp",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "rampUp",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "slowIncrease",
+              "vrCtrl": "rampUp",
+              "vrPower": "rampUp"
+            },
+            "ichip": 11.328125,
+            "iin": 3.28515625,
+            "iinPeak": 3.31640625,
+            "phases": [
+              {
+                "iout": 37.0625,
+                "ioutPeak": 37.125,
+                "statusGlobal": 0,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 0,
+                "temperature": 52.75,
+                "temperaturePeak": 53.25,
+                "vout": 0.71337890625,
+                "voutPeak": 0.714599609375
+              },
+              {
+                "iout": 38.0625,
+                "ioutPeak": 38.125,
+                "statusGlobal": 0,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 0,
+                "temperature": 53,
+                "temperaturePeak": 53.1875,
+                "vout": 0.71337890625,
+                "voutPeak": 0.71435546875
+              }
+            ],
+            "powerLevel": 225,
+            "statusCML": 0,
+            "statusInput": 0,
+            "temperature": 62.625,
+            "temperaturePeak": 63.75,
+            "vccintPhases": 6,
+            "vin": 11.765625,
+            "vinPeak": 11.765625
+          },
+          "canRestart": false,
+          "cores": [
+            {
+              "clock": {
+                "badNonces": 0,
+                "health": "hold",
+                "multiplier": 0.707974137931034,
+                "totalNonces": 28.9446772727708
+              },
+              "stats": {
+                "minute": {
+                  "accepted": 384000,
+                  "calculated": 713246.736384,
+                  "endTime": 50773581963402,
+                  "found": 710548.652032,
+                  "requested": 777389.080576,
+                  "startTime": 50713575773357,
+                  "submitted": 384000,
+                  "valid": 692831.911936
+                },
+                "name": "0000:04:00.0:10000",
+                "total": {
+                  "accepted": 581184000,
+                  "calculated": 600007449.509888,
+                  "endTime": 50774357939997,
+                  "found": 600430522.400768,
+                  "requested": 604271833.776128,
+                  "startTime": 179768269549,
+                  "submitted": 586496000,
+                  "valid": 585301768.536064
+                }
+              }
+            }
+          ],
+          "dna": "400200000128a7071cc0a505",
+          "name": "0000:04:00.0",
+          "operating": true,
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 40.5419616699219,
+              "vccaux": 1.84522774090181,
+              "vccbram": 0.848477912565805,
+              "vccint": 0.685191119249256
+            },
+            {
+              "health": "rampUp",
+              "temperature": 38.396484375,
+              "vccaux": 1.84733348592355,
+              "vccbram": 0.849668116273747,
+              "vccint": 0.696955825131609
+            },
+            {
+              "health": "rampUp",
+              "temperature": 41.5488586425781,
+              "vccaux": 1.84614328221561,
+              "vccbram": 0.849301899748226,
+              "vccint": 0.688807507438773
+            }
+          ],
+          "voltage": 0.71337890625
+        }
+      ]
+    }
+  },
+  "worksources": {
+    "eaglesong": [
+      {
+        "difficulty": 29.8023223876953,
+        "hashesPerDiff1": 4294967296,
+        "stats": {
+          "minute": {
+            "accepted": 3072000,
+            "calculated": 2869043.82464,
+            "endTime": 50773581963402,
+            "found": 2927557.083136,
+            "requested": 3178275.79904,
+            "startTime": 50713575773357,
+            "submitted": 3072000,
+            "valid": 2851858.284544
+          },
+          "name": "us-ckb.2miners.com:6565",
+          "total": {
+            "accepted": 2106112000,
+            "calculated": 2139582025.51296,
+            "endTime": 50773581963402,
+            "found": 2183232808.28826,
+            "requested": 2414012138.52058,
+            "startTime": 5021516364,
+            "submitted": 2124288000,
+            "valid": 2128403792.65843
+          }
+        }
+      }
+    ]
+  }
+}
