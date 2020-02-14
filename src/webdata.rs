@@ -3,6 +3,7 @@ use reqwest;
 use serde::Deserialize;
 use serde_json;
 use std::fs;
+use std::process::{exit, ExitCode, Termination};
 
 pub struct Worker {
     pub name: String,
@@ -200,6 +201,12 @@ impl WebData {
 
         self.minerator = blob["minerator"].as_str().unwrap().to_string();
         debug!("Read minerator: {}", self.minerator);
+        if self.minerator.contains("00.93.") {
+            error!("Unsupported version: {}", self.minerator);
+            pancurses::endwin();
+            println!("Unsupported version of minerator: {} Please upgrade to a newer version", self.minerator);
+            exit(ExitCode::FAILURE.report())
+        }
 
         let thing = &blob["fee"]["allmine-fee-v1"][0]["algo"];
         let mut fee = Algo::new();

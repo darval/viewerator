@@ -24,3 +24,4 @@ fn parse_2bcu1cvp() {
     wd.process_response(input);
     assert_eq!(wd.workers.len(), 3);
 }
+

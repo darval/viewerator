@@ -1,0 +1,244 @@
+{
+  "fee": {
+    "allmine-fee-v1": [
+      {
+      }
+    ]
+  },
+  "minerator": "00.93.04",
+  "version": 0,
+  "workers": {
+    "5466": {
+      "devices": [
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 12.231,
+              "aux12VCurrent": 0.377,
+              "aux3V3": 3.412,
+              "auxTemperature": [
+                29,
+                28,
+                32
+              ],
+              "ddr4vppBtm": 2.5,
+              "ddr4vppTop": 2.5,
+              "dimmTemperature": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "fanSpeed": 0,
+              "fanTemperature": 29,
+              "fpgaTemperature": 26,
+              "inputPower": 11.459775,
+              "mgt0V9avcc": 0.911,
+              "mgtavtt": 1.206,
+              "pex12V": 12.208,
+              "pex12VCurrent": 0.561,
+              "pex3V3": 3.363,
+              "pex3V3Current": 0,
+              "sw12V": 12.218,
+              "sys5V5": 5.491,
+              "vcc0V85": 0.857,
+              "vcc1V2Top": 1.204,
+              "vcc1V8": 1.849,
+              "vccint": 0.661,
+              "vccintCurrent": 3.09765625
+            },
+            "health": {
+              "inputCurrentAUX": "rampUp",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "rampUp",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "rampUp",
+              "vrCtrl": "rampUp",
+              "vrPower": "rampUp"
+            },
+            "ichip": 2.95703125,
+            "iin": 0.06982421875,
+            "iinPeak": 0.0859375,
+            "phases": [
+              {
+                "iout": 0.7744140625,
+                "ioutPeak": 0.7919921875,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 32,
+                "temperature": 33.5,
+                "temperaturePeak": 33.5,
+                "vout": 0.660888671875,
+                "voutPeak": 0.6611328125
+              },
+              {
+                "iout": 0.8603515625,
+                "ioutPeak": 0.8974609375,
+                "statusGlobal": 32769,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 32,
+                "temperature": 32.9375,
+                "temperaturePeak": 32.9375,
+                "vout": 0.66064453125,
+                "voutPeak": 0.660888671875
+              }
+            ],
+            "powerLevel": 150,
+            "statusCML": 0,
+            "statusInput": 0,
+            "temperature": 39.0625,
+            "temperaturePeak": 39.4375,
+            "vccintPhases": 4,
+            "vin": 12.171875,
+            "vinPeak": 12.171875
+          },
+          "dna": "400200000117ab284c810285",
+          "name": "0000:01:00.0",
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 26.6700439453125,
+              "vccaux": 1.84188601510643,
+              "vccbram": 0.853604943923094,
+              "vccint": 0.660059510185397
+            },
+            {
+              "health": "rampUp",
+              "temperature": 26.4531555175781,
+              "vccaux": 1.84078736552987,
+              "vccbram": 0.853192950331884,
+              "vccint": 0.659555962462806
+            },
+            {
+              "health": "rampUp",
+              "temperature": 25.6321716308594,
+              "vccaux": 1.83685053788052,
+              "vccbram": 0.85136186770428,
+              "vccint": 0.658503089951934
+            }
+          ],
+          "voltage": 0.660888671875
+        },
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 12.272,
+              "aux12VCurrent": 0.376,
+              "aux3V3": 3.297,
+              "auxTemperature": [
+                29,
+                27,
+                31
+              ],
+              "ddr4vppBtm": 2.5,
+              "ddr4vppTop": 2.5,
+              "dimmTemperature": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "fanSpeed": 0,
+              "fanTemperature": 28,
+              "fpgaTemperature": 26,
+              "inputPower": 12.073352,
+              "mgt0V9avcc": 0.922,
+              "mgtavtt": 1.206,
+              "pex12V": 12.228,
+              "pex12VCurrent": 0.61,
+              "pex3V3": 3.343,
+              "pex3V3Current": 0,
+              "sw12V": 12.165,
+              "sys5V5": 5.486,
+              "vcc0V85": 0.856,
+              "vcc1V2Top": 1.201,
+              "vcc1V8": 1.851,
+              "vccint": 0.701,
+              "vccintCurrent": 4.845703125
+            },
+            "health": {
+              "inputCurrentAUX": "rampUp",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "rampUp",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "rampUp",
+              "vrCtrl": "rampUp",
+              "vrPower": "rampUp"
+            },
+            "ichip": 2.77734375,
+            "iin": 0.077880859375,
+            "iinPeak": 0.0906982421875,
+            "phases": [
+              {
+                "iout": 0.8076171875,
+                "ioutPeak": 0.8076171875,
+                "statusGlobal": 0,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 0,
+                "temperature": 32.8125,
+                "temperaturePeak": 32.8125,
+                "vout": 0.70068359375,
+                "voutPeak": 0.700927734375
+              },
+              {
+                "iout": 0.7822265625,
+                "ioutPeak": 0.78515625,
+                "statusGlobal": 0,
+                "statusIout": 0,
+                "statusManufacturer": 0,
+                "statusTemperature": 0,
+                "statusVout": 0,
+                "temperature": 31.71875,
+                "temperaturePeak": 32.4375,
+                "vout": 0.700927734375,
+                "voutPeak": 0.701171875
+              }
+            ],
+            "powerLevel": 225,
+            "statusCML": 0,
+            "statusInput": 0,
+            "temperature": 36.875,
+            "temperaturePeak": 37.1875,
+            "vccintPhases": 6,
+            "vin": 12.1875,
+            "vinPeak": 12.1875
+          },
+          "dna": "400200000128b32144a0c405",
+          "name": "0000:05:00.0",
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 25.9884338378906,
+              "vccaux": 1.84321355001144,
+              "vccbram": 0.853192950331884,
+              "vccint": 0.700205996795605
+            },
+            {
+              "health": "rampUp",
+              "temperature": 25.7870483398438,
+              "vccaux": 1.84197756923781,
+              "vccbram": 0.852552071412222,
+              "vccint": 0.699153124284733
+            },
+            {
+              "health": "rampUp",
+              "temperature": 26.9488830566406,
+              "vccaux": 1.84811169604028,
+              "vccbram": 0.855619134813458,
+              "vccint": 0.702311741817349
+            }
+          ],
+          "voltage": 0.70068359375
+        }
+      ]
+    }
+  }
+}
