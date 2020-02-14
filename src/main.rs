@@ -1,5 +1,6 @@
 use std::fs::OpenOptions;
 use std::fs;
+use std::panic;
 use std::path::Path;
 use simplelog::*;
 use log::*;
@@ -35,6 +36,10 @@ fn main() {
     init_logging(&matches);
 
     let mut scr = screen::Screen::new(webdata::WebData::new());
+    panic::set_hook(Box::new(|_| {
+        endwin();
+        eprintln!("Unexpected termination.  Please report what happened at https://github.com/darval/viewerator/issues");
+    }));
     scr.init();
     scr.mainloop(&matches);
     endwin();
