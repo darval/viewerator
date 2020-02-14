@@ -2,3 +2,4 @@
 
 pub mod webdata;
 pub mod screen;
+pub mod log_display;

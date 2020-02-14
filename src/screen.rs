@@ -4,6 +4,7 @@ use std::convert::TryInto;
 use log::*;
 
 use crate::webdata;
+use crate::log_display;
 
 pub struct Screen {
     window: Window,
@@ -73,6 +74,7 @@ impl Screen {
     }
 
     pub fn mainloop<'a>(&mut self, matches: &clap::ArgMatches<'a>) {
+        let mut ld = log_display::LogDisplay::new();
         loop {
             match self.window.getch() {
                 Some(Input::Character(c)) => { 
@@ -86,22 +88,23 @@ impl Screen {
                                 }
                             self.current_worker = w - 1;
                             info!("Showing device {}", w - 1);
-                            self.update_screen(&matches);
+                            self.update_screen(&matches,&mut ld);
                         }
                     }
                 },
                 Some(Input::KeyDC) => break,
                 Some(_input) => {}, // ignore
-                None => { self.update_screen(&matches); }
+                None => { self.update_screen(&matches, &mut ld); }
             }
             self.window.refresh();
         }
         info!("Exiting..");
     }
 
-    pub fn update_screen<'a>(&mut self, matches: &clap::ArgMatches<'a>)  {
+    pub fn update_screen<'a>(&mut self, matches: &clap::ArgMatches<'a>, ld: &mut log_display::LogDisplay)  {
         debug!("Getting data");
         self.wd.getdata(matches);
+        let loginfo = ld.read_raw();
         debug!("Updating screen");
         self.window.printw(format!("Viewerator v{}, press delete to exit    ", clap::crate_version!()));
         let attr = self.set_text_colors(&"critical".to_string());
@@ -183,6 +186,24 @@ impl Screen {
                 }
             }
         }
+        self.window.mv(21,0);
+        let lines_available: usize = (self.y - 21).try_into().unwrap();
+        let name = format!("{}: ", &self.wd.workers[self.current_worker].cores.cores[0].stats.name);
+        info!("Name is '{}'", name);
+        let match_this_board: Vec<&String> = loginfo.iter().filter(|s| s.contains(&name) ).collect();
+        let starting_index = match_this_board.len() - lines_available;
+        let display_lines = &match_this_board[starting_index..];
+        for line in display_lines {
+            let mut attr = pancurses::A_NORMAL;
+            if line.contains("WRN") {
+                attr = pancurses::COLOR_PAIR(HEALTH_COLOR_HOLD.try_into().unwrap());
+            } else if line.contains("ERR") {
+                attr = pancurses::COLOR_PAIR(HEALTH_COLOR_CRITICAL.try_into().unwrap());
+            }
+            self.window.attron(attr);
+            self.window.printw(format!("{}\n", line));
+            self.window.attroff(attr);
+        } 
         self.window.mv(self.y-1, self.x-1);
 
     }
