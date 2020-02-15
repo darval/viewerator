@@ -13,4 +13,7 @@ anywhere as it is stand alone app).
 The terminal you run it in must be at least 126x26 characters in size.  No vt100's with 80x24 allowed. :)  If you have multiple cards, you
 can select the displayed card selected 1-n where n is the last card. This will only work for your first 9 cards.
 
+The /var/log/minerator.log is displayed at the bottom of the screen.  It is filtered per card, so when you select different cards, you
+see the tail of the log as it applies to that card.
+
 It is a work in progress and with all the normal caveats, use it and see if it is useful to you.

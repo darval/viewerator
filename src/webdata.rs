@@ -3,6 +3,7 @@ use reqwest;
 use serde::Deserialize;
 use serde_json;
 use std::fs;
+use std::process::{exit, ExitCode, Termination};
 
 pub struct Worker {
     pub name: String,
@@ -200,6 +201,15 @@ impl WebData {
 
         self.minerator = blob["minerator"].as_str().unwrap().to_string();
         debug!("Read minerator: {}", self.minerator);
+        if self.minerator.contains("00.93.") {
+            error!("Unsupported version: {}", self.minerator);
+            pancurses::endwin();
+            println!(
+                "Unsupported version of minerator: {} Please upgrade to a newer version",
+                self.minerator
+            );
+            exit(ExitCode::FAILURE.report())
+        }
 
         let thing = &blob["fee"]["allmine-fee-v1"][0]["algo"];
         let mut fee = Algo::new();
@@ -251,11 +261,9 @@ impl WebData {
                                 };
                                 let ip = format!("{}", w["bmc"]["adc"]["inputPower"].to_string());
                                 let input_power: f32 = serde_json::from_str(&*ip).unwrap();
-                                let ac =
-                                    format!("{}", w["bmc"]["adc"]["aux12VCurrent"].to_string());
+                                let ac = format!("{}", w["bmc"]["adc"]["aux12VCurrent"].to_string());
                                 let aux_current: f32 = serde_json::from_str(&*ac).unwrap();
-                                let pc =
-                                    format!("{}", w["bmc"]["adc"]["pex12VCurrent"].to_string());
+                                let pc = format!("{}", w["bmc"]["adc"]["pex12VCurrent"].to_string());
                                 let pex_current: f32 = serde_json::from_str(&*pc).unwrap();
                                 let av = format!("{}", w["bmc"]["adc"]["aux12V"].to_string());
                                 let aux_12v: f32 = serde_json::from_str(&*av).unwrap();
@@ -263,8 +271,7 @@ impl WebData {
                                 let pex_12v: f32 = serde_json::from_str(&*pv).unwrap();
                                 let vi = format!("{}", w["bmc"]["adc"]["vccint"].to_string());
                                 let vccint: f32 = serde_json::from_str(&*vi).unwrap();
-                                let vc =
-                                    format!("{}", w["bmc"]["adc"]["vccintCurrent"].to_string());
+                                let vc = format!("{}", w["bmc"]["adc"]["vccintCurrent"].to_string());
                                 let vccint_current: f32 = serde_json::from_str(&*vc).unwrap();
                                 let mut vrctrl_temp = 0.0;
                                 let mut phase0_status_global = 0;
@@ -277,36 +284,19 @@ impl WebData {
                                 if hw_type == HWTYPE_BCU {
                                     let vt = format!("{}", w["bmc"]["temperature"].to_string());
                                     vrctrl_temp = serde_json::from_str(&*vt).unwrap();
-                                    let psg = format!(
-                                        "{}",
-                                        w["bmc"]["phases"][0]["statusGlobal"].to_string()
-                                    );
+                                    let psg = format!("{}", w["bmc"]["phases"][0]["statusGlobal"].to_string());
                                     phase0_status_global = serde_json::from_str(&*psg).unwrap();
-                                    let pt = format!(
-                                        "{}",
-                                        w["bmc"]["phases"][0]["temperature"].to_string()
-                                    );
+                                    let pt = format!("{}", w["bmc"]["phases"][0]["temperature"].to_string());
                                     phase0_temperature = serde_json::from_str(&*pt).unwrap();
-                                    let pv =
-                                        format!("{}", w["bmc"]["phases"][0]["vout"].to_string());
+                                    let pv = format!("{}", w["bmc"]["phases"][0]["vout"].to_string());
                                     phase0_vout = serde_json::from_str(&*pv).unwrap();
-                                    let psg = format!(
-                                        "{}",
-                                        w["bmc"]["phases"][1]["statusGlobal"].to_string()
-                                    );
+                                    let psg = format!("{}", w["bmc"]["phases"][1]["statusGlobal"].to_string());
                                     phase1_status_global = serde_json::from_str(&*psg).unwrap();
-                                    let pt = format!(
-                                        "{}",
-                                        w["bmc"]["phases"][1]["temperature"].to_string()
-                                    );
+                                    let pt = format!("{}", w["bmc"]["phases"][1]["temperature"].to_string());
                                     phase1_temperature = serde_json::from_str(&*pt).unwrap();
-                                    let pv =
-                                        format!("{}", w["bmc"]["phases"][1]["vout"].to_string());
+                                    let pv = format!("{}", w["bmc"]["phases"][1]["vout"].to_string());
                                     phase1_vout = serde_json::from_str(&*pv).unwrap();
-                                    vrctrl_temp_health = w["bmc"]["health"]["vrCtrl"]
-                                    .as_str()
-                                    .unwrap()
-                                    .to_string();
+                                    vrctrl_temp_health = w["bmc"]["health"]["vrCtrl"].as_str().unwrap().to_string();
                                 }
                                 let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
                                 let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
@@ -322,10 +312,7 @@ impl WebData {
                                     name: w["name"].as_str().unwrap().to_string(),
                                     hw_type,
                                     input_power,
-                                    input_power_health: w["bmc"]["health"]["inputPower"]
-                                        .as_str()
-                                        .unwrap()
-                                        .to_string(),
+                                    input_power_health: w["bmc"]["health"]["inputPower"].as_str().unwrap().to_string(),
                                     aux_current,
                                     aux_current_health: w["bmc"]["health"]["inputCurrentAUX"]
                                         .as_str()
@@ -337,15 +324,9 @@ impl WebData {
                                         .unwrap()
                                         .to_string(),
                                     aux_12v,
-                                    aux_12v_health: w["bmc"]["health"]["inputVoltageAUX"]
-                                        .as_str()
-                                        .unwrap()
-                                        .to_string(),
+                                    aux_12v_health: w["bmc"]["health"]["inputVoltageAUX"].as_str().unwrap().to_string(),
                                     pex_12v,
-                                    pex_12v_health: w["bmc"]["health"]["inputVoltagePEX"]
-                                        .as_str()
-                                        .unwrap()
-                                        .to_string(),
+                                    pex_12v_health: w["bmc"]["health"]["inputVoltagePEX"].as_str().unwrap().to_string(),
                                     vccint,
                                     vccint_current,
                                     vccint_current_health: w["bmc"]["health"]["vccintCurrent"]

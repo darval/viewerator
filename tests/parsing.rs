@@ -1,5 +1,5 @@
-use std::fs;
 use mylib::*;
+use std::fs;
 
 #[test]
 fn parse_4bcu() {
