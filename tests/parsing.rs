@@ -1,5 +1,5 @@
-use std::fs;
 use mylib::*;
+use std::fs;
 
 #[test]
 fn parse_4bcu() {
@@ -24,4 +24,3 @@ fn parse_2bcu1cvp() {
     wd.process_response(input);
     assert_eq!(wd.workers.len(), 3);
 }
-
