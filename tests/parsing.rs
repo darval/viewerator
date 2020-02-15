@@ -24,3 +24,11 @@ fn parse_2bcu1cvp() {
     wd.process_response(input);
     assert_eq!(wd.workers.len(), 3);
 }
+
+#[test]
+fn parse_1cvp_00() {
+    let mut wd = webdata::WebData::new();
+    let input = fs::read_to_string("tests/data/1cvp_00.00.00.json").unwrap();
+    wd.process_response(input);
+    assert_eq!(wd.workers.len(), 1);
+}

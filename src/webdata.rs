@@ -256,7 +256,11 @@ impl WebData {
                                     "\"69581525\"" => HWTYPE_BCU,
                                     _ => {
                                         debug!("Unknown hw type: '{}'", w["hwType"].to_string());
-                                        HWTYPE_BCU
+                                        if w["bmc"]["temperature"].to_string() == "null" {
+                                            HWTYPE_CVP
+                                        } else {
+                                            HWTYPE_BCU
+                                        }
                                     } // assume unknown is BCU
                                 };
                                 let ip = format!("{}", w["bmc"]["adc"]["inputPower"].to_string());

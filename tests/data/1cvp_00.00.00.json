@@ -1,0 +1,169 @@
+{
+  "fee": {
+    "allmine-fee-v1": [
+      {
+        "algo": {
+          "eaglesong": {
+            "difficulty": 0,
+            "hashesPerDiff1": 4294967296,
+            "stats": {
+              "minute": {
+                "accepted": 0,
+                "calculated": 0,
+                "endTime": 374898220597,
+                "found": 0,
+                "requested": 0,
+                "startTime": 314883079740,
+                "submitted": 0,
+                "valid": 0
+              },
+              "name": "Eaglesong fee",
+              "total": {
+                "accepted": 0,
+                "calculated": 0,
+                "endTime": 374898220597,
+                "found": 0,
+                "requested": 0,
+                "startTime": 77753342775,
+                "submitted": 0,
+                "valid": 0
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "minerator": "00.00.00",
+  "version": 0,
+  "workers": {
+    "5599": {
+      "devices": [
+        {
+          "bmc": {
+            "adc": {
+              "aux12V": 11.9925,
+              "aux12VCurrent": 5.44,
+              "auxTemperature": [
+                26
+              ],
+              "inputPower": 139.26,
+              "pex12V": 11.9925,
+              "pex12VCurrent": 5.92,
+              "vccint": 0.67883,
+              "vccintCurrent": 160
+            },
+            "health": {
+              "inputCurrentAUX": "rampUp",
+              "inputCurrentPEX": "rampUp",
+              "inputPower": "rampUp",
+              "inputVoltageAUX": "rampUp",
+              "inputVoltagePEX": "rampUp",
+              "vccintCurrent": "rampUp",
+              "vrPower": "rampUp"
+            }
+          },
+          "canRestart": false,
+          "cores": [
+            {
+              "clock": {
+                "badNonces": 0,
+                "health": "hold",
+                "multiplier": 0.95,
+                "totalNonces": 34.4340779425856
+              },
+              "stats": {
+                "minute": {
+                  "accepted": 512000,
+                  "calculated": 418295.750656,
+                  "endTime": 374898220597,
+                  "found": 427349.245952,
+                  "requested": 472446.40256,
+                  "startTime": 314883079740,
+                  "submitted": 512000,
+                  "valid": 427349.245952
+                },
+                "name": "0000:07:00.0:10000",
+                "total": {
+                  "accepted": 2816000,
+                  "calculated": 2033101.258752,
+                  "endTime": 395126329026,
+                  "found": 2076616.687616,
+                  "requested": 2383706.84928,
+                  "startTime": 77753342775,
+                  "submitted": 2816000,
+                  "valid": 2076616.687616
+                }
+              }
+            }
+          ],
+          "dna": "40020000012926451510e305",
+          "name": "0000:07:00.0",
+          "operating": true,
+          "sysmon": [
+            {
+              "health": "rampUp",
+              "temperature": 23.9746398925781,
+              "vccaux": 1.76369878690776,
+              "vccbram": 0.8461890592813,
+              "vccint": 0.664728770885786
+            },
+            {
+              "health": "rampUp",
+              "temperature": 21.7517395019531,
+              "vccaux": 1.76447699702449,
+              "vccbram": 0.84637216754406,
+              "vccint": 0.672281986724651
+            },
+            {
+              "health": "rampUp",
+              "temperature": 23.1614074707031,
+              "vccaux": 1.76035706111238,
+              "vccbram": 0.844678416113527,
+              "vccint": 0.670130464637217
+            },
+            {
+              "health": "rampUp",
+              "temperature": 27.0650634765625,
+              "vccaux": 1.76498054474708,
+              "vccbram": 0.847241931792172,
+              "vccint": 0.667475394827192
+            }
+          ],
+          "voltage": 0.67883
+        }
+      ]
+    }
+  },
+  "worksources": {
+    "eaglesong": [
+      {
+        "difficulty": 29.8023223876953,
+        "hashesPerDiff1": 4294967296,
+        "stats": {
+          "minute": {
+            "accepted": 512000,
+            "calculated": 408020.375552,
+            "endTime": 374898220597,
+            "found": 425201.762304,
+            "requested": 472446.40256,
+            "startTime": 314883079740,
+            "submitted": 512000,
+            "valid": 425201.762304
+          },
+          "name": "us-ckb.2miners.com:6565",
+          "total": {
+            "accepted": 2816000,
+            "calculated": 1945613.074432,
+            "endTime": 374898220597,
+            "found": 2049773.142016,
+            "requested": 2383706.84928,
+            "startTime": 74808877430,
+            "submitted": 2816000,
+            "valid": 2049773.142016
+          }
+        }
+      }
+    ]
+  }
+}

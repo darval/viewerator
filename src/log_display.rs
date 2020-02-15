@@ -26,7 +26,7 @@ impl LogDisplay {
         } else {
             reader.seek(SeekFrom::Start(0)).unwrap();
         }
-        for line in reader.lines().map(|l| l.unwrap()) {
+        for line in reader.lines().map(|l| l.unwrap_or_else(|_| String::from(""))) {
             raw.push(line);
         }
         raw
