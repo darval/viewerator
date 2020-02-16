@@ -9,6 +9,7 @@ pub struct Worker {
     pub name: String,
     pub dna: String,
     pub hw_type: u16,
+    pub worse_health: String,
     pub input_power: f32,
     pub input_power_health: String,
     pub aux_current: f32,
@@ -189,6 +190,21 @@ impl WebData {
         }
     }
 
+    fn min_health(s1: &String, s2: &String) -> String {
+        if s1 == "critical" || s2 == "critical" {
+            String::from("critical")
+        } else if s1 == "slowDecrease" || s2 == "slowDecrease" {
+            String::from("slowDecrease")
+        } else if s1 == "hold" || s2 == "hold" {
+            String::from("hold")
+        } else if s1 == "slowIncrease" || s2 == "slowIncrease" {
+            String::from("slowIncrease")
+        } else { 
+            String::from("rampUp")
+        }
+
+    }
+
     pub fn process_response(&mut self, response: String) {
         let blob: serde_json::Value = match serde_json::from_str(&response) {
             Ok(blob) => blob,
@@ -263,6 +279,7 @@ impl WebData {
                                         }
                                     } // assume unknown is BCU
                                 };
+                                let mut worse_health = String::from("none");
                                 let ip = format!("{}", w["bmc"]["adc"]["inputPower"].to_string());
                                 let input_power: f32 = serde_json::from_str(&*ip).unwrap();
                                 let ac = format!("{}", w["bmc"]["adc"]["aux12VCurrent"].to_string());
@@ -301,57 +318,60 @@ impl WebData {
                                     let pv = format!("{}", w["bmc"]["phases"][1]["vout"].to_string());
                                     phase1_vout = serde_json::from_str(&*pv).unwrap();
                                     vrctrl_temp_health = w["bmc"]["health"]["vrCtrl"].as_str().unwrap().to_string();
+                                    worse_health = WebData::min_health(&worse_health, &vrctrl_temp_health);
                                 }
                                 let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
                                 let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
 
                                 let c = format!("{{ \"cores\": {} }}", w["cores"].to_string());
                                 let cores: Cores = serde_json::from_str(&*c).unwrap();
+                                worse_health = WebData::min_health(&worse_health, &cores.cores[0].clock.health);
                                 let mut dna = w["dna"].as_str().unwrap_or("");
                                 if dna == "" {
                                     dna = w["hwUID"].as_str().unwrap();
                                 }
+                                let input_power_health = w["bmc"]["health"]["inputPower"].as_str().unwrap().to_string();
+                                worse_health = WebData::min_health(&worse_health, &input_power_health);
+                                let aux_current_health = w["bmc"]["health"]["inputCurrentAUX"].as_str().unwrap().to_string();
+                                worse_health = WebData::min_health(&worse_health, &aux_current_health);
+                                let pex_current_health = w["bmc"]["health"]["inputCurrentPEX"].as_str().unwrap().to_string();
+                                worse_health = WebData::min_health(&worse_health, &pex_current_health);
+                                let aux_12v_health = w["bmc"]["health"]["inputVoltageAUX"].as_str().unwrap().to_string();
+                                worse_health = WebData::min_health(&worse_health, &aux_12v_health);
+                                let pex_12v_health = w["bmc"]["health"]["inputVoltagePEX"].as_str().unwrap().to_string();
+                                worse_health = WebData::min_health(&worse_health, &pex_12v_health);
+                                let vccint_current_health = w["bmc"]["health"]["vccintCurrent"].as_str().unwrap().to_string();
+                                worse_health = WebData::min_health(&worse_health, &vccint_current_health);
+                                let phase0_temperature_health = w["bmc"]["health"]["vrPower"].as_str().unwrap().to_string();
+                                worse_health = WebData::min_health(&worse_health, &phase0_temperature_health);
+                                let phase1_temperature_health = phase0_temperature_health.clone();
                                 self.workers.push(Worker {
                                     dna: dna.to_string(),
                                     name: w["name"].as_str().unwrap().to_string(),
                                     hw_type,
+                                    worse_health,
                                     input_power,
-                                    input_power_health: w["bmc"]["health"]["inputPower"].as_str().unwrap().to_string(),
+                                    input_power_health,
                                     aux_current,
-                                    aux_current_health: w["bmc"]["health"]["inputCurrentAUX"]
-                                        .as_str()
-                                        .unwrap()
-                                        .to_string(),
+                                    aux_current_health,
                                     pex_current,
-                                    pex_current_health: w["bmc"]["health"]["inputCurrentPEX"]
-                                        .as_str()
-                                        .unwrap()
-                                        .to_string(),
+                                    pex_current_health,
                                     aux_12v,
-                                    aux_12v_health: w["bmc"]["health"]["inputVoltageAUX"].as_str().unwrap().to_string(),
+                                    aux_12v_health,
                                     pex_12v,
-                                    pex_12v_health: w["bmc"]["health"]["inputVoltagePEX"].as_str().unwrap().to_string(),
+                                    pex_12v_health,
                                     vccint,
                                     vccint_current,
-                                    vccint_current_health: w["bmc"]["health"]["vccintCurrent"]
-                                        .as_str()
-                                        .unwrap()
-                                        .to_string(),
+                                    vccint_current_health,
                                     vrctrl_temp,
                                     vrctrl_temp_health,
                                     phase0_status_global,
                                     phase0_temperature,
-                                    phase0_temperature_health: w["bmc"]["health"]["vrPower"]
-                                        .as_str()
-                                        .unwrap()
-                                        .to_string(),
+                                    phase0_temperature_health,
                                     phase0_vout,
                                     phase1_status_global,
                                     phase1_temperature,
-                                    phase1_temperature_health: w["bmc"]["health"]["vrPower"]
-                                        .as_str()
-                                        .unwrap()
-                                        .to_string(),
+                                    phase1_temperature_health,
                                     phase1_vout,
                                     sysmons,
                                     cores,

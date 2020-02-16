@@ -126,6 +126,7 @@ impl Screen {
             "Viewerator v{}, press delete to exit    ",
             clap::crate_version!()
         ));
+        self.window.mv(0, self.x - 47);
         let attr = self.set_text_colors(&"critical".to_string());
         self.window.printw(" --- ");
         self.window.attroff(attr);
@@ -288,10 +289,12 @@ impl Screen {
 
     fn draw_devices(&self, y: i32, x: i32) {
         self.window.mvprintw(y, x, " Current device is highlighted: ");
-        for (i, _) in self.wd.workers.iter().enumerate() {
+        for (i, w) in self.wd.workers.iter().enumerate() {
             let mut attr = pancurses::A_NORMAL;
             if self.current_worker == i {
-                attr = pancurses::A_BOLD | pancurses::A_UNDERLINE;
+                attr |= pancurses::A_BOLD | pancurses::A_UNDERLINE;
+            } else {
+                attr = self.set_text_colors(&w.worse_health);
             }
             self.window.attron(attr);
             self.window.printw(format!("{}", i + 1));
