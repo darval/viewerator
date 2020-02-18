@@ -45,10 +45,19 @@ fn main() {
 
     let mut scr = screen::Screen::new(webdata::WebData::new());
     if !matches.is_present("debug") {
-        panic::set_hook(Box::new(|_| {
+        panic::set_hook(Box::new(|panic_info| {
             endwin();
+            if let Some(s) = panic_info.payload().downcast_ref::<&str>() {
+                eprintln!("{:?}", s);
+            }
+            if let Some(location) = panic_info.location() {
+                eprintln!("Unexpected termination occurred in file '{}' at line {}", location.file(),
+                    location.line());
+            } else {
+                eprintln!("Unexpected termination occurred but can't get location information...");
+            }
             eprintln!(
-                "Unexpected termination.  Please report what happened at https://github.com/darval/viewerator/issues"
+                "Please report what happened at https://github.com/darval/viewerator/issues"
             );
         }));
     }
