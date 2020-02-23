@@ -218,7 +218,9 @@ impl Screen {
             self.window.mv(21, 0);
             let lines_available: usize = (self.y - 21).try_into().unwrap();
             let name = format!("{}: ", &self.wd.workers[self.current_worker].cores.cores[0].stats.name);
-            let match_this_board: Vec<&String> = loginfo.iter().filter(|s| s.contains(&name)).collect();
+            let match_this_board: Vec<&String> = loginfo.iter().filter(|s| {
+                s.contains(&name) || s.contains("Fee")
+            }).collect();
             let starting_index = match_this_board.len() - lines_available;
             let display_lines = &match_this_board[starting_index..];
             for line in display_lines {

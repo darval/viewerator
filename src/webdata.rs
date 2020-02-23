@@ -281,6 +281,7 @@ impl WebData {
                                 };
                                 let mut worse_health = String::from("none");
                                 let ip = format!("{}", w["bmc"]["adc"]["inputPower"].to_string());
+                                debug!("Input Power is {}", ip);
                                 let input_power: f32 = serde_json::from_str(&*ip).unwrap();
                                 let ac = format!("{}", w["bmc"]["adc"]["aux12VCurrent"].to_string());
                                 let aux_current: f32 = serde_json::from_str(&*ac).unwrap();

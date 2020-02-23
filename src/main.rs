@@ -7,6 +7,7 @@ use std::fs;
 use std::fs::OpenOptions;
 use std::panic;
 use std::path::Path;
+use directories::ProjectDirs;
 
 fn main() {
     let matches = clap::App::new(clap::crate_name!())
@@ -69,9 +70,14 @@ fn main() {
 fn init_logging<'a>(matches: &clap::ArgMatches<'a>) {
     let appname = clap::crate_name!();
     let version = clap::crate_version!();
-    let default_config = format!("{}/.{}", env!("HOME"), appname);
+    let mut default_config = String::from("/tmp");
+    if let Some(project_dirs) = ProjectDirs::from("org", "darval",  appname) {
+        if let Some(config) = project_dirs.config_dir().to_str() {
+            default_config = String::from(config);
+        }
+    }
     let mut created_dir = false;
-    let config_dir = matches.value_of("config_dir").unwrap_or(&default_config);
+    let config_dir = matches.value_of("config_dir").unwrap_or(default_config.as_str());
     if !(Path::new(&config_dir).exists()) {
         fs::create_dir_all(&config_dir).unwrap();
         created_dir = true;

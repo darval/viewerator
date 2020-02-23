@@ -3,6 +3,7 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::io::Seek;
 use std::io::SeekFrom;
+use log::*;
 
 pub struct LogDisplay {
     fd: File,
@@ -27,6 +28,12 @@ impl LogDisplay {
             reader.seek(SeekFrom::Start(0)).unwrap();
         }
         for line in reader.lines().map(|l| l.unwrap_or_else(|_| String::from(""))) {
+            if line.contains("Received SIGHUP") {
+                self.fd = File::open("/var/log/minerator.log").unwrap();
+                info!("minerator log rolled, opened new one");
+                break;
+            }
+
             raw.push(line);
         }
         raw
