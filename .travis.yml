@@ -9,7 +9,7 @@ jobs:
   fast_finish: true
 script:
   - cargo test 
-  - cargo build --release
+  - NCURSES_RS_RUSTC_LINK_LIB=static=ncursesw NCURSES_RS_RUSTC_FLAGS=-L/usr/lib64 cargo build --release
 
 # before_deploy:
 #     # Set up git user name and tag this commit
