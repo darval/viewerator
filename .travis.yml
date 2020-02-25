@@ -9,6 +9,7 @@ jobs:
   fast_finish: true
 
 before_install:
+  - sudo apt-get update
   - sudo apt-get -y install libncurses5-dev/eoan
 
 script:
