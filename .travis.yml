@@ -9,8 +9,8 @@ jobs:
   fast_finish: true
 
 before_install:
-  - sudo apt-get -y install libncurses5-dev
-  
+  - sudo apt-get -y install libncurses5-dev/eoan
+
 script:
   - cargo test 
   - NCURSES_RS_RUSTC_LINK_LIB=static=ncursesw NCURSES_RS_RUSTC_FLAGS=-L/usr/lib64 cargo build --release
