@@ -9,13 +9,14 @@ jobs:
   fast_finish: true
 
 before_install:
-  - echo "deb http://us.archive.ubuntu.com/ubuntu/ eoan main restricted" >> /etc/apt/sources.list
-  - sudo apt-get update
-  - sudo apt-get -y install libncurses5-dev/eoan
+  # - echo "deb http://us.archive.ubuntu.com/ubuntu/ eoan main restricted" >> /etc/apt/sources.list
+  # - sudo apt-get update
+  - sudo apt-get -y install libncurses5-dev
+  - sudo apt-get -y install libgpm-dev
 
 script:
   - cargo test 
-  - NCURSES_RS_RUSTC_LINK_LIB=static=ncursesw NCURSES_RS_RUSTC_FLAGS=-L/usr/lib64 cargo build --release
+  - NCURSES_RS_RUSTC_LINK_LIB=static=ncursesw NCURSES_RS_RUSTC_FLAGS="-L/usr/lib64 -lgpm" cargo build --release
 
 # before_deploy:
 #     # Set up git user name and tag this commit
