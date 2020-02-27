@@ -1,7 +1,6 @@
 use log::*;
-use reqwest;
 use serde::Deserialize;
-use serde_json;
+use std::error::Error;
 use std::fs;
 use std::process::{exit, ExitCode, Termination};
 
@@ -62,7 +61,7 @@ pub struct Clock {
     pub totalNonces: f32,
 }
 
-#[derive(Deserialize, Debug, Clone, Copy)]
+#[derive(Deserialize, Debug, Default, Clone, Copy)]
 #[allow(non_snake_case)]
 pub struct StatDetail {
     pub accepted: f32,
@@ -116,6 +115,12 @@ pub struct Algo {
     pub stats: Stats,
 }
 
+impl Default for Algo {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Algo {
     pub fn new() -> Algo {
         Algo {
@@ -138,6 +143,12 @@ pub struct WebData {
 
 pub const HWTYPE_BCU: u16 = 1;
 pub const HWTYPE_CVP: u16 = 2;
+
+impl Default for WebData {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl WebData {
     pub fn new() -> WebData {
@@ -162,17 +173,55 @@ impl WebData {
             let send = self.client.get(&url).send();
             let resp = match send {
                 Err(e) => {
-                    match e.status() {
-                        Some(err) => info!("Problem parsing info {}", err),
-                        None => info!("No status given"),
+                    if e.is_timeout() {
+                        info!(
+                            "Connection to minerator timed out. Please ensure minerator is running\n{:?}",
+                            e
+                        );
+                        pancurses::endwin();
+                        eprintln!(
+                            "Connection to minerator timed out. Please ensure minerator is running\n{:?}",
+                            e
+                        );
+                        exit(ExitCode::FAILURE.report())
                     }
                     if e.is_redirect() {
-                        info!("server redirecting too many times or making loop");
+                        info!("server redirecting too many times or making loop\n{:?}", e);
+                        pancurses::endwin();
+                        eprintln!(
+                            "Connection to server redirecting too many times or making loop\n{:?}",
+                            e
+                        );
+                        exit(ExitCode::FAILURE.report())
+                    }
+                    match e.status() {
+                        Some(err) => info!("Problem parsing info {}", err),
+                        None => {
+                            let err1: Box<dyn Error> = From::from(e);
+                            info!("No status given for error: {:?} => {}", err1, err1);
+                            // if err1.is() reqwest::error::Error) {
+                            //     info!(
+                            //         "TCP Connect error to minerator. Please ensure minerator is running\n{:?}",
+                            //         err1
+                            //     );
+                            //     pancurses::endwin();
+                            //     eprintln!(
+                            //         "TCP Connect error to minerator. Please ensure minerator is running\n{:?}",
+                            //         err1
+                            //     );
+                            //     exit(ExitCode::FAILURE.report())
+                            // }
+                        }
                     }
                     return;
                 }
                 Ok(resp) => resp,
             };
+            if resp.status().is_server_error() {
+                info!("Server error");
+                return;
+            }
+
             match resp.text() {
                 Ok(response) => {
                     self.process_response(response);
@@ -190,7 +239,7 @@ impl WebData {
         }
     }
 
-    fn min_health(s1: &String, s2: &String) -> String {
+    fn min_health(s1: &str, s2: &str) -> String {
         if s1 == "critical" || s2 == "critical" {
             String::from("critical")
         } else if s1 == "slowDecrease" || s2 == "slowDecrease" {
@@ -199,10 +248,9 @@ impl WebData {
             String::from("hold")
         } else if s1 == "slowIncrease" || s2 == "slowIncrease" {
             String::from("slowIncrease")
-        } else { 
+        } else {
             String::from("rampUp")
         }
-
     }
 
     pub fn process_response(&mut self, response: String) {
@@ -214,13 +262,19 @@ impl WebData {
             }
         };
         self.workers.clear();
-
+        debug!("blob = '{}'", blob["httpStatus"]);
+        if blob["httpStatus"] != serde_json::Value::Null {
+            error!("Http Status {}", blob["httpStatus"]);
+            pancurses::endwin();
+            eprintln!("Http Status: {} Please ensure minerator is running", blob["httpStatus"]);
+            exit(ExitCode::FAILURE.report())
+        }
         self.minerator = blob["minerator"].as_str().unwrap().to_string();
         debug!("Read minerator: {}", self.minerator);
         if self.minerator.contains("00.93.") {
             error!("Unsupported version: {}", self.minerator);
             pancurses::endwin();
-            println!(
+            eprintln!(
                 "Unsupported version of minerator: {} Please upgrade to a newer version",
                 self.minerator
             );
@@ -229,163 +283,148 @@ impl WebData {
 
         let thing = &blob["fee"]["allmine-fee-v1"][0]["algo"];
         let mut fee = Algo::new();
-        match thing {
-            serde_json::Value::Object(a) => {
-                if let Some(al) = a.iter().next() {
-                    let (_algo_name, algo) = al;
-                    let algo_str = algo.to_string();
-                    let algo: Algo = serde_json::from_str(&*algo_str).unwrap();
-                    fee = algo;
-                }
-                // _ => {},
+        if let serde_json::Value::Object(a) = thing {
+            if let Some(al) = a.iter().next() {
+                let (_algo_name, algo) = al;
+                let algo_str = algo.to_string();
+                let algo: Algo = serde_json::from_str(&*algo_str).unwrap();
+                fee = algo;
             }
-            _ => {}
         }
         let thing = &blob["worksources"];
         let mut worksource = Algo::new();
-        match thing {
-            serde_json::Value::Object(a) => {
-                if let Some(al) = a.iter().next() {
-                    let (_algo_name, algo) = al;
-                    let algo_str = algo[0].to_string();
-                    let algo: Algo = serde_json::from_str(&*algo_str).unwrap();
-                    worksource = algo;
-                }
-                // _ => {},
+        if let serde_json::Value::Object(a) = thing {
+            if let Some(al) = a.iter().next() {
+                let (_algo_name, algo) = al;
+                let algo_str = algo[0].to_string();
+                let algo: Algo = serde_json::from_str(&*algo_str).unwrap();
+                worksource = algo;
             }
-            _ => {}
         }
 
         let config = &blob["workers"];
         // Because we don't know the name of the key for the config, we do weird stuff
         // to find the first key value pair and work on the value
-        match config {
-            serde_json::Value::Object(thing) => {
-                for o in thing.iter().enumerate() {
-                    let (_, dev) = o;
-                    let (_name, device) = dev;
-                    match &device["devices"] {
-                        serde_json::Value::Array(workers) => {
-                            for w in workers {
-                                let hw_type = match &*w["hwType"].to_string() {
-                                    "\"4277c013\"" => HWTYPE_CVP,
-                                    "\"69581525\"" => HWTYPE_BCU,
-                                    _ => {
-                                        debug!("Unknown hw type: '{}'", w["hwType"].to_string());
-                                        if w["bmc"]["temperature"].to_string() == "null" {
-                                            HWTYPE_CVP
-                                        } else {
-                                            HWTYPE_BCU
-                                        }
-                                    } // assume unknown is BCU
-                                };
-                                let mut worse_health = String::from("none");
-                                let ip = format!("{}", w["bmc"]["adc"]["inputPower"].to_string());
-                                debug!("Input Power is {}", ip);
-                                let input_power: f32 = serde_json::from_str(&*ip).unwrap();
-                                let ac = format!("{}", w["bmc"]["adc"]["aux12VCurrent"].to_string());
-                                let aux_current: f32 = serde_json::from_str(&*ac).unwrap();
-                                let pc = format!("{}", w["bmc"]["adc"]["pex12VCurrent"].to_string());
-                                let pex_current: f32 = serde_json::from_str(&*pc).unwrap();
-                                let av = format!("{}", w["bmc"]["adc"]["aux12V"].to_string());
-                                let aux_12v: f32 = serde_json::from_str(&*av).unwrap();
-                                let pv = format!("{}", w["bmc"]["adc"]["pex12V"].to_string());
-                                let pex_12v: f32 = serde_json::from_str(&*pv).unwrap();
-                                let vi = format!("{}", w["bmc"]["adc"]["vccint"].to_string());
-                                let vccint: f32 = serde_json::from_str(&*vi).unwrap();
-                                let vc = format!("{}", w["bmc"]["adc"]["vccintCurrent"].to_string());
-                                let vccint_current: f32 = serde_json::from_str(&*vc).unwrap();
-                                let mut vrctrl_temp = 0.0;
-                                let mut phase0_status_global = 0;
-                                let mut phase0_temperature = 0.0;
-                                let mut phase0_vout = 0.0;
-                                let mut phase1_status_global = 0;
-                                let mut phase1_temperature = 0.0;
-                                let mut phase1_vout = 0.0;
-                                let mut vrctrl_temp_health = String::from("None");
-                                if hw_type == HWTYPE_BCU {
-                                    let vt = format!("{}", w["bmc"]["temperature"].to_string());
-                                    vrctrl_temp = serde_json::from_str(&*vt).unwrap();
-                                    let psg = format!("{}", w["bmc"]["phases"][0]["statusGlobal"].to_string());
-                                    phase0_status_global = serde_json::from_str(&*psg).unwrap();
-                                    let pt = format!("{}", w["bmc"]["phases"][0]["temperature"].to_string());
-                                    phase0_temperature = serde_json::from_str(&*pt).unwrap();
-                                    let pv = format!("{}", w["bmc"]["phases"][0]["vout"].to_string());
-                                    phase0_vout = serde_json::from_str(&*pv).unwrap();
-                                    let psg = format!("{}", w["bmc"]["phases"][1]["statusGlobal"].to_string());
-                                    phase1_status_global = serde_json::from_str(&*psg).unwrap();
-                                    let pt = format!("{}", w["bmc"]["phases"][1]["temperature"].to_string());
-                                    phase1_temperature = serde_json::from_str(&*pt).unwrap();
-                                    let pv = format!("{}", w["bmc"]["phases"][1]["vout"].to_string());
-                                    phase1_vout = serde_json::from_str(&*pv).unwrap();
-                                    vrctrl_temp_health = w["bmc"]["health"]["vrCtrl"].as_str().unwrap().to_string();
-                                    worse_health = WebData::min_health(&worse_health, &vrctrl_temp_health);
+        if let serde_json::Value::Object(thing) = config {
+            for o in thing.iter().enumerate() {
+                let (_, dev) = o;
+                let (_name, device) = dev;
+                if let serde_json::Value::Array(workers) = &device["devices"] {
+                    for w in workers {
+                        let hw_type = match &*w["hwType"].to_string() {
+                            "\"4277c013\"" => HWTYPE_CVP,
+                            "\"69581525\"" => HWTYPE_BCU,
+                            _ => {
+                                debug!("Unknown hw type: '{}'", w["hwType"].to_string());
+                                if w["bmc"]["temperature"] == serde_json::value::Value::Null {
+                                    HWTYPE_CVP
+                                } else {
+                                    HWTYPE_BCU
                                 }
-                                let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
-                                let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
-
-                                let c = format!("{{ \"cores\": {} }}", w["cores"].to_string());
-                                let cores: Cores = serde_json::from_str(&*c).unwrap();
-                                worse_health = WebData::min_health(&worse_health, &cores.cores[0].clock.health);
-                                let mut dna = w["dna"].as_str().unwrap_or("");
-                                if dna == "" {
-                                    dna = w["hwUID"].as_str().unwrap();
-                                }
-                                let input_power_health = w["bmc"]["health"]["inputPower"].as_str().unwrap().to_string();
-                                worse_health = WebData::min_health(&worse_health, &input_power_health);
-                                let aux_current_health = w["bmc"]["health"]["inputCurrentAUX"].as_str().unwrap().to_string();
-                                worse_health = WebData::min_health(&worse_health, &aux_current_health);
-                                let pex_current_health = w["bmc"]["health"]["inputCurrentPEX"].as_str().unwrap().to_string();
-                                worse_health = WebData::min_health(&worse_health, &pex_current_health);
-                                let aux_12v_health = w["bmc"]["health"]["inputVoltageAUX"].as_str().unwrap().to_string();
-                                worse_health = WebData::min_health(&worse_health, &aux_12v_health);
-                                let pex_12v_health = w["bmc"]["health"]["inputVoltagePEX"].as_str().unwrap().to_string();
-                                worse_health = WebData::min_health(&worse_health, &pex_12v_health);
-                                let vccint_current_health = w["bmc"]["health"]["vccintCurrent"].as_str().unwrap().to_string();
-                                worse_health = WebData::min_health(&worse_health, &vccint_current_health);
-                                let phase0_temperature_health = w["bmc"]["health"]["vrPower"].as_str().unwrap().to_string();
-                                worse_health = WebData::min_health(&worse_health, &phase0_temperature_health);
-                                let phase1_temperature_health = phase0_temperature_health.clone();
-                                self.workers.push(Worker {
-                                    dna: dna.to_string(),
-                                    name: w["name"].as_str().unwrap().to_string(),
-                                    hw_type,
-                                    worse_health,
-                                    input_power,
-                                    input_power_health,
-                                    aux_current,
-                                    aux_current_health,
-                                    pex_current,
-                                    pex_current_health,
-                                    aux_12v,
-                                    aux_12v_health,
-                                    pex_12v,
-                                    pex_12v_health,
-                                    vccint,
-                                    vccint_current,
-                                    vccint_current_health,
-                                    vrctrl_temp,
-                                    vrctrl_temp_health,
-                                    phase0_status_global,
-                                    phase0_temperature,
-                                    phase0_temperature_health,
-                                    phase0_vout,
-                                    phase1_status_global,
-                                    phase1_temperature,
-                                    phase1_temperature_health,
-                                    phase1_vout,
-                                    sysmons,
-                                    cores,
-                                    fee: fee.clone(),
-                                    worksource: worksource.clone(),
-                                });
-                            }
+                            } // assume unknown is BCU
+                        };
+                        let mut worse_health = String::from("none");
+                        let ip = w["bmc"]["adc"]["inputPower"].to_string();
+                        debug!("Input Power is {}", ip);
+                        let input_power: f32 = serde_json::from_str(&*ip).unwrap();
+                        let ac = w["bmc"]["adc"]["aux12VCurrent"].to_string();
+                        let aux_current: f32 = serde_json::from_str(&*ac).unwrap();
+                        let pc = w["bmc"]["adc"]["pex12VCurrent"].to_string();
+                        let pex_current: f32 = serde_json::from_str(&*pc).unwrap();
+                        let av = w["bmc"]["adc"]["aux12V"].to_string();
+                        let aux_12v: f32 = serde_json::from_str(&*av).unwrap();
+                        let pv = w["bmc"]["adc"]["pex12V"].to_string();
+                        let pex_12v: f32 = serde_json::from_str(&*pv).unwrap();
+                        let vi = w["bmc"]["adc"]["vccint"].to_string();
+                        let vccint: f32 = serde_json::from_str(&*vi).unwrap();
+                        let vc = w["bmc"]["adc"]["vccintCurrent"].to_string();
+                        let vccint_current: f32 = serde_json::from_str(&*vc).unwrap();
+                        let mut vrctrl_temp = 0.0;
+                        let mut phase0_status_global = 0;
+                        let mut phase0_temperature = 0.0;
+                        let mut phase0_vout = 0.0;
+                        let mut phase1_status_global = 0;
+                        let mut phase1_temperature = 0.0;
+                        let mut phase1_vout = 0.0;
+                        let mut vrctrl_temp_health = String::from("None");
+                        if hw_type == HWTYPE_BCU {
+                            let vt = w["bmc"]["temperature"].to_string();
+                            vrctrl_temp = serde_json::from_str(&*vt).unwrap();
+                            let psg = w["bmc"]["phases"][0]["statusGlobal"].to_string();
+                            phase0_status_global = serde_json::from_str(&*psg).unwrap();
+                            let pt = w["bmc"]["phases"][0]["temperature"].to_string();
+                            phase0_temperature = serde_json::from_str(&*pt).unwrap();
+                            let pv = w["bmc"]["phases"][0]["vout"].to_string();
+                            phase0_vout = serde_json::from_str(&*pv).unwrap();
+                            let psg = w["bmc"]["phases"][1]["statusGlobal"].to_string();
+                            phase1_status_global = serde_json::from_str(&*psg).unwrap();
+                            let pt = w["bmc"]["phases"][1]["temperature"].to_string();
+                            phase1_temperature = serde_json::from_str(&*pt).unwrap();
+                            let pv = w["bmc"]["phases"][1]["vout"].to_string();
+                            phase1_vout = serde_json::from_str(&*pv).unwrap();
+                            vrctrl_temp_health = w["bmc"]["health"]["vrCtrl"].as_str().unwrap().to_string();
+                            worse_health = WebData::min_health(&worse_health, &vrctrl_temp_health);
                         }
-                        _ => {}
+                        let s = format!("{{ \"sysmon\": {} }}", w["sysmon"].to_string());
+                        let sysmons: SysMons = serde_json::from_str(&*s).unwrap();
+                        let c = format!("{{ \"cores\": {} }}", w["cores"].to_string());
+                        let cores: Cores = serde_json::from_str(&*c).unwrap();
+                        worse_health = WebData::min_health(&worse_health, &cores.cores[0].clock.health);
+                        let mut dna = w["dna"].as_str().unwrap_or("");
+                        if dna == "" {
+                            dna = w["hwUID"].as_str().unwrap();
+                        }
+                        let input_power_health = w["bmc"]["health"]["inputPower"].as_str().unwrap().to_string();
+                        worse_health = WebData::min_health(&worse_health, &input_power_health);
+                        let aux_current_health = w["bmc"]["health"]["inputCurrentAUX"].as_str().unwrap().to_string();
+                        worse_health = WebData::min_health(&worse_health, &aux_current_health);
+                        let pex_current_health = w["bmc"]["health"]["inputCurrentPEX"].as_str().unwrap().to_string();
+                        worse_health = WebData::min_health(&worse_health, &pex_current_health);
+                        let aux_12v_health = w["bmc"]["health"]["inputVoltageAUX"].as_str().unwrap().to_string();
+                        worse_health = WebData::min_health(&worse_health, &aux_12v_health);
+                        let pex_12v_health = w["bmc"]["health"]["inputVoltagePEX"].as_str().unwrap().to_string();
+                        worse_health = WebData::min_health(&worse_health, &pex_12v_health);
+                        let vccint_current_health = w["bmc"]["health"]["vccintCurrent"].as_str().unwrap().to_string();
+                        worse_health = WebData::min_health(&worse_health, &vccint_current_health);
+                        let phase0_temperature_health = w["bmc"]["health"]["vrPower"].as_str().unwrap().to_string();
+                        worse_health = WebData::min_health(&worse_health, &phase0_temperature_health);
+                        let phase1_temperature_health = phase0_temperature_health.clone();
+                        self.workers.push(Worker {
+                            dna: dna.to_string(),
+                            name: w["name"].as_str().unwrap().to_string(),
+                            hw_type,
+                            worse_health,
+                            input_power,
+                            input_power_health,
+                            aux_current,
+                            aux_current_health,
+                            pex_current,
+                            pex_current_health,
+                            aux_12v,
+                            aux_12v_health,
+                            pex_12v,
+                            pex_12v_health,
+                            vccint,
+                            vccint_current,
+                            vccint_current_health,
+                            vrctrl_temp,
+                            vrctrl_temp_health,
+                            phase0_status_global,
+                            phase0_temperature,
+                            phase0_temperature_health,
+                            phase0_vout,
+                            phase1_status_global,
+                            phase1_temperature,
+                            phase1_temperature_health,
+                            phase1_vout,
+                            sysmons,
+                            cores,
+                            fee: fee.clone(),
+                            worksource: worksource.clone(),
+                        });
                     }
-                }
+                };
             }
-            _ => {}
         }
 
         //        debug!("Read first device dna {}, name {}", self.workers[0].dna, self.workers[0].name);

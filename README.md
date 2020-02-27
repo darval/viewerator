@@ -1,5 +1,6 @@
 # viewerator
-Console based Minerator viewer written in Rust              
+
+Console based Minerator viewer written in Rust
 <img style="float: right;" src="https://travis-ci.org/darval/viewerator.svg">
 
 ![Screen Shot](sample_screen.png)

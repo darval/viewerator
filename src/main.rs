@@ -1,3 +1,4 @@
+use directories::ProjectDirs;
 use log::*;
 use mylib::screen;
 use mylib::webdata;
@@ -7,7 +8,6 @@ use std::fs;
 use std::fs::OpenOptions;
 use std::panic;
 use std::path::Path;
-use directories::ProjectDirs;
 
 fn main() {
     let matches = clap::App::new(clap::crate_name!())
@@ -27,6 +27,13 @@ fn main() {
                 .long("log_level")
                 .value_name("debug|info|warn|error")
                 .help("Sets the log level (default info) for the viewerator.log in the config directory"),
+        )
+        .arg(
+            clap::Arg::with_name("host")
+                .short("h")
+                .long("host")
+                .value_name("url")
+                .help("Read JSON from different url rather than http://localhost"),
         )
         .arg(
             clap::Arg::with_name("input_file")
@@ -52,14 +59,15 @@ fn main() {
                 eprintln!("{:?}", s);
             }
             if let Some(location) = panic_info.location() {
-                eprintln!("Unexpected termination occurred in file '{}' at line {}", location.file(),
-                    location.line());
+                eprintln!(
+                    "Unexpected termination occurred in file '{}' at line {}",
+                    location.file(),
+                    location.line()
+                );
             } else {
                 eprintln!("Unexpected termination occurred but can't get location information...");
             }
-            eprintln!(
-                "Please report what happened at https://github.com/darval/viewerator/issues"
-            );
+            eprintln!("Please report what happened at https://github.com/darval/viewerator/issues");
         }));
     }
     scr.init();
@@ -71,13 +79,15 @@ fn init_logging<'a>(matches: &clap::ArgMatches<'a>) {
     let appname = clap::crate_name!();
     let version = clap::crate_version!();
     let mut default_config = String::from("/tmp");
-    if let Some(project_dirs) = ProjectDirs::from("org", "darval",  appname) {
+    if let Some(project_dirs) = ProjectDirs::from("org", "darval", appname) {
         if let Some(config) = project_dirs.config_dir().to_str() {
             default_config = String::from(config);
         }
     }
     let mut created_dir = false;
-    let config_dir = matches.value_of("config_dir").unwrap_or(default_config.as_str());
+    let config_dir = matches
+        .value_of("config_dir")
+        .unwrap_or_else(|| default_config.as_str());
     if !(Path::new(&config_dir).exists()) {
         fs::create_dir_all(&config_dir).unwrap();
         created_dir = true;

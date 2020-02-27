@@ -1,14 +1,19 @@
+use log::*;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::io::Seek;
 use std::io::SeekFrom;
-use log::*;
 
 pub struct LogDisplay {
     fd: File,
 }
 
+impl Default for LogDisplay {
+    fn default() -> LogDisplay {
+        Self::new()
+    }
+}
 impl LogDisplay {
     pub fn new() -> LogDisplay {
         LogDisplay {

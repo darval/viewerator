@@ -161,48 +161,40 @@ impl Screen {
                 self.window.hline(ACS_HLINE(), 24);
                 self.window.mvprintw(5, 0, "Input Power    ");
                 let attr = self.set_text_colors(&w.input_power_health);
-                self.window
-                    .mvprintw(5, 16, format!("{}", Screen::float_to_string3(w.input_power)));
+                self.window.mvprintw(5, 16, Screen::float_to_string3(w.input_power));
                 self.window.attroff(attr);
 
                 self.window.mvprintw(6, 0, "AUX 12V");
                 let attr = self.set_text_colors(&w.aux_12v_health);
-                self.window
-                    .mvprintw(6, 16, format!("{}", Screen::float_to_string3(w.aux_12v)));
+                self.window.mvprintw(6, 16, Screen::float_to_string3(w.aux_12v));
                 self.window.attroff(attr);
 
                 self.window.mvprintw(7, 0, "AUX Current");
                 let attr = self.set_text_colors(&w.aux_current_health);
-                self.window
-                    .mvprintw(7, 16, format!("{}", Screen::float_to_string3(w.aux_current)));
+                self.window.mvprintw(7, 16, Screen::float_to_string3(w.aux_current));
                 self.window.attroff(attr);
 
                 self.window.mvprintw(8, 0, "PEX 12V");
                 let attr = self.set_text_colors(&w.pex_12v_health);
-                self.window
-                    .mvprintw(8, 16, format!("{}", Screen::float_to_string3(w.pex_12v)));
+                self.window.mvprintw(8, 16, Screen::float_to_string3(w.pex_12v));
                 self.window.attroff(attr);
 
                 self.window.mvprintw(9, 0, "PEX Current");
                 let attr = self.set_text_colors(&w.pex_current_health);
-                self.window
-                    .mvprintw(9, 16, format!("{}", Screen::float_to_string3(w.pex_current)));
+                self.window.mvprintw(9, 16, Screen::float_to_string3(w.pex_current));
                 self.window.attroff(attr);
 
                 self.window.mvprintw(10, 0, "VCCINT");
-                self.window
-                    .mvprintw(10, 16, format!("{}", Screen::float_to_string3(w.vccint)));
+                self.window.mvprintw(10, 16, Screen::float_to_string3(w.vccint));
 
                 self.window.mvprintw(11, 0, "VCCINT Current");
                 let attr = self.set_text_colors(&w.vccint_current_health);
-                self.window
-                    .mvprintw(11, 16, format!("{}", Screen::float_to_string3(w.vccint_current)));
+                self.window.mvprintw(11, 16, Screen::float_to_string3(w.vccint_current));
                 self.window.attroff(attr);
 
                 self.window.mvprintw(12, 0, "VRCTRL Temp");
                 let attr = self.set_text_colors(&w.vrctrl_temp_health);
-                self.window
-                    .mvprintw(12, 16, format!("{}", Screen::float_to_string3(w.vrctrl_temp)));
+                self.window.mvprintw(12, 16, Screen::float_to_string3(w.vrctrl_temp));
                 self.window.attroff(attr);
                 if w.hw_type == webdata::HWTYPE_BCU {
                     self.draw_phases(4, 26, &w);
@@ -218,9 +210,10 @@ impl Screen {
             self.window.mv(21, 0);
             let lines_available: usize = (self.y - 21).try_into().unwrap();
             let name = format!("{}: ", &self.wd.workers[self.current_worker].cores.cores[0].stats.name);
-            let match_this_board: Vec<&String> = loginfo.iter().filter(|s| {
-                s.contains(&name) || s.contains("Fee")
-            }).collect();
+            let match_this_board: Vec<&String> = loginfo
+                .iter()
+                .filter(|s| s.contains(&name) || s.contains("Fee"))
+                .collect();
             let starting_index = match_this_board.len() - lines_available;
             let display_lines = &match_this_board[starting_index..];
             for line in display_lines {
@@ -239,19 +232,19 @@ impl Screen {
     }
 
     fn calc_total(stat: webdata::StatDetail, val: f32) -> f32 {
-        let div: f32 = ((stat.endTime - stat.startTime) / 1000000000.0) as f32;
+        let div: f32 = ((stat.endTime - stat.startTime) / 1_000_000_000.0) as f32;
         val / div
     }
 
     fn float_to_string1(f: f32) -> String {
         if f >= 0.0 && f < 1000.0 {
             format!("{:>7.1}", f)
-        } else if f >= 1000.0 && f < 1000000.0 {
+        } else if f >= 1000.0 && f < 1_000_000.0 {
             format!("{:>6.1}K", f / 1000.0)
-        } else if f >= 1000000.0 && f < 1000000000.0 {
-            format!("{:>6.1}M", f / 1000000.0)
-        } else if f >= 1000000000.0 && f < 1000000000000.0 {
-            format!("{:>6.1}G", f / 1000000000.0)
+        } else if f >= 1_000_000.0 && f < 1_000_000_000.0 {
+            format!("{:>6.1}M", f / 1_000_000.0)
+        } else if f >= 1_000_000_000.0 && f < 1_000_000_000_000.0 {
+            format!("{:>6.1}G", f / 1_000_000_000.0)
         } else {
             "*******".to_string()
         }
@@ -265,7 +258,7 @@ impl Screen {
         }
     }
 
-    fn set_text_colors(&self, health: &String) -> pancurses::chtype {
+    fn set_text_colors(&self, health: &str) -> pancurses::chtype {
         let mut attr = pancurses::A_COLOR;
         match &health[..] {
             "rampUp" => {
@@ -316,17 +309,11 @@ impl Screen {
             self.window.mvprintw(y + 2, column_offset, "temp");
             self.window.mvprintw(y + 3, column_offset, "vccint");
             let attr = self.set_text_colors(&sysmon.health);
-            self.window.mvprintw(
-                y + 2,
-                column_offset + 7,
-                format!("{}", Screen::float_to_string3(sysmon.temperature)),
-            );
+            self.window
+                .mvprintw(y + 2, column_offset + 7, Screen::float_to_string3(sysmon.temperature));
             self.window.attroff(attr);
-            self.window.mvprintw(
-                y + 3,
-                column_offset + 7,
-                format!("{}", Screen::float_to_string3(sysmon.vccint)),
-            );
+            self.window
+                .mvprintw(y + 3, column_offset + 7, Screen::float_to_string3(sysmon.vccint));
         }
     }
 
@@ -340,15 +327,12 @@ impl Screen {
             .mvprintw(y + 2, x + 14, format!("{:#08x}", w.phase0_status_global));
         self.window.mvprintw(y + 3, x, "temperature");
         let attr = self.set_text_colors(&w.phase0_temperature_health);
-        self.window.mvprintw(
-            y + 3,
-            x + 14,
-            format!("{}", Screen::float_to_string3(w.phase0_temperature)),
-        );
+        self.window
+            .mvprintw(y + 3, x + 14, Screen::float_to_string3(w.phase0_temperature));
         self.window.attroff(attr);
         self.window.mvprintw(y + 4, x, "vout");
         self.window
-            .mvprintw(y + 4, x + 14, format!("{}", Screen::float_to_string3(w.phase0_vout)));
+            .mvprintw(y + 4, x + 14, Screen::float_to_string3(w.phase0_vout));
 
         self.window.mvprintw(y + 5, x, "LTC3884 Phase 1");
         self.window.mvprintw(y + 6, x, "Global status");
@@ -356,15 +340,12 @@ impl Screen {
             .mvprintw(y + 6, x + 14, format!("{:#08x}", w.phase1_status_global));
         self.window.mvprintw(y + 7, x, "temperature");
         let attr = self.set_text_colors(&w.phase1_temperature_health);
-        self.window.mvprintw(
-            y + 7,
-            x + 14,
-            format!("{}", Screen::float_to_string3(w.phase1_temperature)),
-        );
+        self.window
+            .mvprintw(y + 7, x + 14, Screen::float_to_string3(w.phase1_temperature));
         self.window.attroff(attr);
         self.window.mvprintw(y + 8, x, "vout");
         self.window
-            .mvprintw(y + 8, x + 14, format!("{}", Screen::float_to_string3(w.phase1_vout)));
+            .mvprintw(y + 8, x + 14, Screen::float_to_string3(w.phase1_vout));
     }
 
     fn draw_clock(&self, y: i32, x: i32, clock: &webdata::Clock) {
