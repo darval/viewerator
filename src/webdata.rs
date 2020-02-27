@@ -198,19 +198,14 @@ impl WebData {
                         Some(err) => info!("Problem parsing info {}", err),
                         None => {
                             let err1: Box<dyn Error> = From::from(e);
-                            info!("No status given for error: {:?} => {}", err1, err1);
-                            // if err1.is() reqwest::error::Error) {
-                            //     info!(
-                            //         "TCP Connect error to minerator. Please ensure minerator is running\n{:?}",
-                            //         err1
-                            //     );
-                            //     pancurses::endwin();
-                            //     eprintln!(
-                            //         "TCP Connect error to minerator. Please ensure minerator is running\n{:?}",
-                            //         err1
-                            //     );
-                            //     exit(ExitCode::FAILURE.report())
-                            // }
+                            info!("No status given for error: {:?} => {}", err1, err1.source().unwrap());
+                            if err1.source().unwrap().to_string().contains("Connection refused") {
+                                info!("TCP Connect error to minerator. Please ensure minerator is running");
+                                debug!("TCP Connect error is {:?}", err1);
+                                pancurses::endwin();
+                                eprintln!("TCP Connect error to minerator. Please ensure minerator is running");
+                                exit(ExitCode::FAILURE.report())
+                            }
                         }
                     }
                     return;
