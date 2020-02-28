@@ -26,5 +26,5 @@ Styling an approach like the rust language itself, you should be able to install
 with the following command:
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://github.com/darval/viewerator/blob/development/latest.sh | sh
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/darval/viewerator/development/latest.sh | sh
 ```
