@@ -19,3 +19,12 @@ The /var/log/minerator.log is displayed at the bottom of the screen.  It is filt
 see the tail of the log as it applies to that card.
 
 It is a work in progress and with all the normal caveats, use it and see if it is useful to you.
+
+## Installation
+
+Styling an approach like the rust language itself, you should be able to install the latest version of viewerator on your ubuntu linux box
+with the following command:
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://github/darval/viewerator/blob/development/latest.sh | sh
+```
