@@ -1,6 +1,7 @@
 # viewerator
 
 Console based Minerator viewer written in Rust
+
 <img style="float: right;" src="https://travis-ci.org/darval/viewerator.svg">
 
 ![Screen Shot](sample_screen.png)
@@ -22,19 +23,19 @@ It is a work in progress and with all the normal caveats, use it and see if it i
 
 ## Supported Features
 
-Displays Device DNAs of attached FGPAs
-Displays the min, max, and current temperature and voltage
-Displays running tail on /var/log/minerator.log, filtered to the current board
-Multiple board configurations (up to 8), including mixed BCU1525 and CVP13 combinations 
+- Displays Device DNAs of attached FGPAs
+- Displays the min, max, and current temperature and voltage
+- Displays running tail on /var/log/minerator.log, filtered to the current board
+- Multiple board configurations (up to 8), including mixed BCU1525 and CVP13 combinations 
 
 ## Supported Xilinx FPGAs
 
-XCVU9P: SQRL BCU1525
-XCVU13P: Bittware CVP13
+- XCVU9P: SQRL BCU1525
+- XCVU13P: Bittware CVP13
 
 ## Supported Platforms
 
-Linux (x86-64) running Minerator 00.94.00 or greater
+- Linux (x86-64) running Minerator 00.94.00 or greater
 
 ## Installation
 
