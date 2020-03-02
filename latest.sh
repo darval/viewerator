@@ -8,7 +8,7 @@
 
 # before every release, this need to be updated to show the new "latest" tag
 
-tag="0.2.4"
+tag="0.2.5"
 
 VIEWERATOR_UPDATE_ROOT="${VIEWERATOR_UPDATE_ROOT:-https://github.com/darval/viewerator/releases/download/v}"
 VIEWERATOR_INSTALL_DIR="${VIEWERATOR_INSTALL_DIR:-/usr/local/bin}"
@@ -27,7 +27,6 @@ FLAGS:
     -v, --verbose           Enable verbose output
     -q, --quiet             Disable progress output
     -y                      Disable confirmation prompt.
-        --no-modify-path    Don't configure the PATH environment variable
     -h, --help              Prints help information
     -V, --version           Prints version information
 
@@ -129,6 +128,14 @@ main() {
 }
 
 install() {
+    
+    if $_ansi_escapes_are_valid; then
+        printf "\33[1minfo:\33[0m installing libncurses if needed\n" 1>&2
+    else
+        printf '%s\n' 'info: installing libncurses if needed' 1>&2
+    fi
+    ignore sudo apt-get install $1 libncurses5-dev
+
     if $_ansi_escapes_are_valid; then
         printf "\33[1minfo:\33[0m installing viewerator in ${VIEWERATOR_INSTALL_DIR}\n" 1>&2
     else
