@@ -8,7 +8,7 @@
 
 # before every release, this need to be updated to show the new "latest" tag
 
-tag="0.2.5"
+tag="0.2.6"
 
 VIEWERATOR_UPDATE_ROOT="${VIEWERATOR_UPDATE_ROOT:-https://github.com/darval/viewerator/releases/download/v}"
 VIEWERATOR_INSTALL_DIR="${VIEWERATOR_INSTALL_DIR:-/usr/local/bin}"

@@ -16,7 +16,7 @@ before_install:
 
 script:
   - cargo test 
-  - NCURSES_RS_RUSTC_LINK_LIB=static=ncursesw NCURSES_RS_RUSTC_FLAGS="-L/usr/lib64 -lgpm" cargo build --release
+  - cargo build --release
 
 # before_deploy:
 #     # Set up git user name and tag this commit

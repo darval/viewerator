@@ -28,7 +28,6 @@ serde_json = "1.0"
 [dependencies.reqwest]
 version = "0.10.0"
 features = ["blocking","json"]
-hyper = "0.13"
 
 [badges]
 
